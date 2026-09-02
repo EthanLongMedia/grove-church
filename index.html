@@ -331,6 +331,21 @@ section{position:relative}
 .dark .col p{color:var(--paper-60)}
 .col .h3{letter-spacing:-.02em}
 
+/* Three equal columns, aligned at the top. It steps straight to a
+   single column rather than through auto-fit, which would leave an
+   unbalanced 2-then-1 at middling widths. */
+.trio{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(2rem,4.5vw,4rem);
+  align-items:start;
+}
+.trio .h3{margin-bottom:1rem}
+.trio p + p{margin-top:1.15rem}
+@media (max-width:58rem){
+  .trio{grid-template-columns:1fr;gap:clamp(2.5rem,6vh,3.5rem)}
+}
+
 /* ── Directions ──
    A live map, square and centred, so people can actually route to
    the door rather than squint at a picture of a map. */
@@ -525,49 +540,48 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     </div>
   </section>
 
-  <!-- About -->
+  <!-- About — three even columns, no section heading and no rules.
+       The names carry it on their own. -->
   <section id="about" class="dark">
     <div class="wrap">
-      <p class="label rise" style="color:var(--paper-40);margin-bottom:1.75rem">About us</p>
-      <h2 class="h2 rise d1" style="max-width:15ch">Mission, vision, and what we believe.</h2>
-
-      <div class="cols">
+      <div class="trio">
         <div class="col rise">
-          <p class="label">Mission</p>
-          <p class="body" style="font-size:1.0625rem;margin-top:.75rem">
+          <h2 class="h3">Mission</h2>
+          <p>
             For the church to grow as Christ's disciples understanding we
             are called according to His purpose.
           </p>
         </div>
+
         <div class="col rise d1">
-          <p class="label">Vision</p>
-          <p class="body" style="font-size:1.0625rem;margin-top:.75rem">
+          <h2 class="h3">Vision</h2>
+          <p>
             That the church would grow in the love we have for Christ and
             the love we have for one another while fulfilling our call to
             be the light of Christ within our world.
           </p>
         </div>
-      </div>
 
-      <div class="rise d2" style="margin-top:clamp(3rem,8vh,4.5rem);padding-top:clamp(2rem,5vh,3rem);border-top:1px solid var(--paper-12)">
-        <p class="label" style="color:var(--paper-40);margin-bottom:1.25rem">Beliefs</p>
-        <p class="body" style="color:var(--paper-60)">
-          We believe that the whole universe was created by God. We believe
-          He created mankind in His image to have a deep and loving
-          relationship with. We believe that sin has separated mankind from
-          that relationship and that sin deserves God's judgment and
-          punishment. But instead of His wrath, He desired to show mercy and
-          grace because of His love for humanity.
-        </p>
-        <p class="body" style="color:var(--paper-60);margin-top:1.25rem">
-          This love was shown to us when He crushed His one and only Son,
-          Jesus, on the cross for our sin. We believe that those who put
-          their faith in Christ and His sacrifice are forgiven of sin,
-          receive the Holy Spirit, and have eternal life. We know this to be
-          certain because Jesus has risen from the dead conquering sin and
-          death giving everlasting life to all who hope in Him. We believe
-          He is the only way of salvation.
-        </p>
+        <div class="col rise d2">
+          <h2 class="h3">Beliefs</h2>
+          <p>
+            We believe that the whole universe was created by God. We believe
+            He created mankind in His image to have a deep and loving
+            relationship with. We believe that sin has separated mankind from
+            that relationship and that sin deserves God's judgment and
+            punishment. But instead of His wrath, He desired to show mercy and
+            grace because of His love for humanity.
+          </p>
+          <p>
+            This love was shown to us when He crushed His one and only Son,
+            Jesus, on the cross for our sin. We believe that those who put
+            their faith in Christ and His sacrifice are forgiven of sin,
+            receive the Holy Spirit, and have eternal life. We know this to be
+            certain because Jesus has risen from the dead conquering sin and
+            death giving everlasting life to all who hope in Him. We believe
+            He is the only way of salvation.
+          </p>
+        </div>
       </div>
     </div>
   </section>
