@@ -346,6 +346,28 @@ section{position:relative}
   .trio{grid-template-columns:1fr;gap:clamp(2.5rem,6vh,3.5rem)}
 }
 
+/* Desktop only. Each column's type is sized against how much text it
+   carries — Mission has one sentence and Beliefs has two paragraphs,
+   so at a single size Mission is stranded at the top of an empty
+   column. Sizing them inversely lets all three fill their space.
+   Leading tightens and tracking goes more negative as the size
+   grows; display type set at body values falls apart. Stacked on
+   mobile there is no empty column to fill, so this does not apply. */
+@media (min-width:58rem){
+  .trio .col:nth-child(1) p{
+    font-size:clamp(1.5rem,2.1vw,2rem);
+    line-height:1.24;letter-spacing:-.022em;
+  }
+  .trio .col:nth-child(2) p{
+    font-size:clamp(1.1875rem,1.6vw,1.5rem);
+    line-height:1.34;letter-spacing:-.014em;
+  }
+  .trio .col:nth-child(3) p{
+    font-size:1rem;
+    line-height:1.62;letter-spacing:-.003em;
+  }
+}
+
 /* ── Directions ──
    A live map, square and centred, so people can actually route to
    the door rather than squint at a picture of a map. */
@@ -356,7 +378,26 @@ section{position:relative}
   border:1px solid var(--ink-12);
   background:#e9e9e9;
 }
-.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* Inert until clicked. A live Google Maps iframe runs its own loop
+   and hit-tests every pointer move, and it swallows the wheel — which
+   is exactly what makes scrolling past it and mousing over it feel
+   sticky. Gating pointer events hands scrolling back to the page. */
+.map-frame iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;
+  pointer-events:none;
+}
+.map-frame.live iframe{pointer-events:auto}
+
+.map-hint{
+  position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);
+  z-index:2;margin:0;
+  padding:.5rem .9rem;border-radius:999px;
+  background:rgba(11,11,11,.74);color:#fff;
+  font-size:.75rem;letter-spacing:.02em;line-height:1;
+  pointer-events:none;
+  transition:opacity .3s var(--ease-out);
+}
+.map-frame.live .map-hint{opacity:0}
 .mapblock figcaption{
   margin:clamp(1.75rem,4vh,2.5rem) auto 0;
   max-width:var(--measure);
@@ -517,12 +558,11 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       </div>
 
       <figure class="mapblock rise">
-        <div class="map-frame">
-          <iframe
-            src="https://maps.google.com/maps?q=200%20W%20Grove%20St%2C%20Midland%2C%20MI%2048640&z=16&output=embed"
-            title="Map showing Grove Church Midland at 200 W. Grove St., Midland, Michigan"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <!-- The iframe is not in the markup: it is built once the map
+             scrolls close, and stays inert until clicked. -->
+        <div class="map-frame" id="map"
+             data-src="https://maps.google.com/maps?q=200%20W%20Grove%20St%2C%20Midland%2C%20MI%2048640&amp;z=16&amp;output=embed">
+          <p class="map-hint">Click to interact</p>
         </div>
 
         <div class="directions">
@@ -833,6 +873,29 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   }, {threshold:0.08, rootMargin:"0px 0px -8% 0px"});
 
   document.querySelectorAll(".rise,.frame").forEach(function(el){ io.observe(el); });
+
+  /* ── Map ───────────────────────────────────────────────────
+     Built only once it is nearly in view, so nothing is running
+     while you scroll the rest of the page, and left inert until
+     clicked so it never fights the scroll or hit-tests hovers. */
+  var mapFrame = document.getElementById("map");
+  if (mapFrame){
+    var mapIO = new IntersectionObserver(function(entries){
+      if (!entries[0].isIntersecting) return;
+      mapIO.disconnect();
+      var f = document.createElement("iframe");
+      f.title = "Map showing Grove Church Midland at 200 W. Grove St., Midland, Michigan";
+      f.loading = "lazy";
+      f.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+      f.src = mapFrame.dataset.src;
+      mapFrame.insertBefore(f, mapFrame.firstChild);
+    }, {rootMargin: "300px 0px"});
+    mapIO.observe(mapFrame);
+
+    mapFrame.addEventListener("click", function(){
+      mapFrame.classList.add("live");
+    });
+  }
 
   /* ── Nav: invert over light sections ───────────────────────
      Sampled against the nav's own lower edge so the flip happens
