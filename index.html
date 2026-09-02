@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grove Church Midland</title>
+<meta name="description" content="A place where Christ is most important and people are deeply loved. Sunday worship at 10am — 200 W. Grove St., Midland, Michigan.">
+<link rel="icon" href="assets/logo-src.jpg">
+<script>
+document.documentElement.className="js";
+/* The intro plays on every load, so the page must always come up at
+   the top. Set here rather than in the deferred script at the end of
+   body: the browser schedules its scroll restore earlier than that. */
+try{ history.scrollRestoration="manual"; }catch(e){}
+</script>
+<style>
+/* ============================================================
+   GROVE CHURCH MIDLAND
+   Colour intro, black-and-white site. System font (SF Pro on
+   Apple platforms) per Apple's "default to the platform font"
+   rule — it ships optical sizing and tracking tables already.
+   ============================================================ */
+
+:root{
+  --ink:#0B0B0B;         /* near-black, not pure — pure black clips on OLED */
+  --paper:#FFFFFF;
+  --ink-60:rgba(11,11,11,.60);
+  --ink-40:rgba(11,11,11,.40);
+  --ink-12:rgba(11,11,11,.12);
+  --paper-60:rgba(255,255,255,.60);
+  --paper-40:rgba(255,255,255,.40);
+  --paper-12:rgba(255,255,255,.12);
+
+  --gutter:clamp(1.25rem, 5vw, 5rem);
+  --measure:36rem;
+
+  /* Apple spring approximations, for the non-gesture transitions */
+  --ease-out:cubic-bezier(.16,1,.3,1);      /* critically damped feel */
+  --ease-in:cubic-bezier(.7,0,.84,0);        /* mirror of the above  */
+}
+
+*,*::before,*::after{box-sizing:border-box}
+/* No scroll-behavior:smooth — Lenis drives scrolling and the two
+   fight each other. Anchor jumps go through lenis.scrollTo instead. */
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  font:400 100%/1.5 system-ui,-apple-system,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-optical-sizing:auto;
+  background:var(--ink);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+::selection{background:var(--paper);color:var(--ink)}
+
+/* ── Type scale ────────────────────────────────────────────────
+   Tracking is size-specific: display sizes take negative tracking
+   (letters read too far apart as they grow), body sits near 0,
+   small labels take a positive bump. Leading tracks size inversely. */
+
+.display{font-size:clamp(2.5rem,8vw,7rem);line-height:.95;letter-spacing:-.045em;font-weight:600;margin:0}
+.h2{font-size:clamp(1.75rem,4.4vw,3.5rem);line-height:1.05;letter-spacing:-.032em;font-weight:600;margin:0}
+.h3{font-size:clamp(1.125rem,2vw,1.55rem);line-height:1.22;letter-spacing:-.018em;font-weight:600;margin:0}
+.body{font-size:clamp(1.0625rem,1.3vw,1.1875rem);line-height:1.65;letter-spacing:-.003em;margin:0;max-width:var(--measure)}
+.label{font-size:.75rem;line-height:1;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin:0}
+
+/* ══════════════════════════════════════════════════════════════
+   1. INTRO
+   Reference: burocratik.com — near-black field, small understated
+   type, letters resolving out of blur. Centred here: three beats,
+   then the site.
+   ══════════════════════════════════════════════════════════════ */
+
+#intro{
+  position:fixed;inset:0;z-index:100;
+  background:var(--ink);
+  display:grid;place-items:center;
+  cursor:pointer;
+  overflow:hidden;
+}
+#intro[hidden]{display:none}
+
+.intro-stage{
+  position:relative;
+  display:grid;place-items:center;
+  width:min(92vw,60rem);height:min(72vh,40rem);
+  z-index:2;
+}
+
+.beat{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(92vw,56rem);
+  text-align:center;
+  /* Roughly three times the reference's 17px. Leading tightens and
+     tracking goes more negative as it grows — display type set at
+     body values falls apart. */
+  font-size:clamp(2rem, 4.6vw, 3.25rem);
+  line-height:1.16;
+  letter-spacing:-.038em;
+  font-weight:400;
+  color:var(--paper);
+}
+/* Characters animate individually, but they are grouped per word so
+   a line that wraps breaks between words and never mid-word. */
+.beat .w{display:inline-block;white-space:nowrap}
+/* Blur and travel are in em so they scale with the type instead of
+   becoming a faint smudge at display size.
+   No will-change here on purpose: a long line is ~60 characters, and
+   hinting every one of them promotes 60 layers and costs more than
+   it saves. The blur is kept modest for the same reason — a 20px
+   blur on 60 simultaneous elements is what makes this stutter. */
+.beat .c{
+  display:inline-block;
+  opacity:0;filter:blur(.22em);transform:translateY(.3em);
+}
+.beat.in .c{
+  opacity:1;filter:blur(0);transform:none;
+  transition:opacity .52s var(--ease-out),filter .52s var(--ease-out),transform .58s var(--ease-out);
+}
+/* Leaving is a plain fade — no blur, no lift, and the whole line
+   goes at once. The per-character delay is inline, so clearing it
+   needs !important or the exit would stagger like the entrance. */
+.beat.out .c{
+  opacity:0;filter:blur(0);transform:none;
+  /* fades in place — no blur, no lift */
+  transition:opacity .5s linear;
+  transition-delay:0s !important;
+}
+
+/* Beat 3 — the mark.
+   logo-white.png is the source JPEG keyed offline to real alpha
+   (white background → clear, line art → white). Because the
+   transparency is in the file, there is no square to hide, and so
+   no invert(), no blend mode, and nothing a stacking context can
+   isolate. It composites correctly on any ground. */
+.beat-mark{
+  position:absolute;
+  /* Also ~3x. The vh term keeps it inside a short laptop window,
+     where width alone would run it past the top and bottom. */
+  width:min(80vw,62vh,40rem);
+  opacity:0;transform:scale(.92);
+  will-change:opacity,transform;
+}
+/* One long decelerating push, held at rest before the fade.
+   The exit MUST restate the scale: removing .in otherwise drops the
+   transform back to the base value with no transition on it, and the
+   mark visibly snaps outward as it fades. */
+.beat-mark.in{
+  opacity:1;transform:scale(1);
+  transition:opacity .7s var(--ease-out),transform 1.5s var(--ease-out);
+}
+.beat-mark.out{
+  opacity:0;transform:scale(1);
+  transition:opacity .5s linear,transform 1.5s var(--ease-out);
+}
+
+.intro-skip{
+  position:absolute;bottom:clamp(1.5rem,5vh,2.75rem);left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  color:var(--paper-40);
+  font-size:.8125rem;letter-spacing:.11em;text-transform:uppercase;
+  text-shadow:0 1px 12px rgba(0,0,0,.6);
+  opacity:0;transition:opacity .5s var(--ease-out);
+}
+.intro-skip.show{opacity:1}
+
+/* translate3d keeps the slide on the GPU; the hint is on one element
+   so it costs a single layer. */
+#intro{will-change:transform}
+#intro.lift{transform:translate3d(0,-100%,0);transition:transform .92s cubic-bezier(.76,0,.24,1)}
+
+/* ══════════════════════════════════════════════════════════════
+   2. CHROME
+   ══════════════════════════════════════════════════════════════ */
+
+/* Switched instantly, not faded. The overlay is still covering the
+   viewport at the moment this flips, so the fade was invisible — and
+   animating opacity on the whole page forced a second full-viewport
+   layer at exactly the moment the overlay was sliding away. */
+.js #site{opacity:0}
+.js #site.revealed{opacity:1}
+html:not(.js) #intro{display:none}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.9rem var(--gutter);
+  /* Translucent functional layer — content scrolls underneath,
+     rather than an opaque bar eating a fixed strip.
+     A full-width backdrop-filter is re-rasterised on every scroll
+     frame, so this is the cheapest version that still reads as
+     glass: a smaller radius, no saturate (it buys nothing on a
+     black-and-white page), and a slightly more opaque ground to
+     carry the legibility the blur used to. */
+  background:rgba(11,11,11,.72);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--paper-12);
+  transform:translate3d(0,-100%,0);
+  transition:transform .5s var(--ease-out),background .4s linear,border-color .4s linear;
+}
+/* translate3d, not none — keeping the bar on its own compositor
+   layer stops the blur being recomputed against a repainting page. */
+nav.show{transform:translate3d(0,0,0)}
+html:not(.js) nav{transform:translate3d(0,0,0)}
+
+/* Over light sections the chrome inverts, so it stays legible
+   without ever becoming an opaque slab. */
+nav.on-light{background:rgba(255,255,255,.75);border-bottom-color:var(--ink-12)}
+nav.on-light .nav-mark{filter:brightness(0)} /* blackens RGB, keeps alpha */
+nav.on-light a,nav.on-light .nav-name{color:var(--ink)}
+nav.on-light a::after{background:var(--ink)}
+
+.nav-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--paper)}
+.nav-mark{width:2rem;height:2rem;transition:filter .4s linear}
+.nav-name{font-size:.8125rem;letter-spacing:-.01em;font-weight:600;transition:color .4s linear}
+
+.nav-links{display:flex;gap:clamp(.9rem,2.6vw,2.1rem)}
+nav a{
+  position:relative;color:var(--paper);text-decoration:none;
+  font-size:.8125rem;letter-spacing:-.006em;font-weight:500;padding:.25rem 0;
+  transition:color .4s linear,opacity .18s var(--ease-out);
+}
+/* Underline grows from the left — hinting in the direction of travel */
+nav a::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;
+  background:var(--paper);transform:scaleX(0);transform-origin:left;
+  transition:transform .34s var(--ease-out);
+}
+nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
+nav a:active{opacity:.55;transition-duration:0s} /* feedback on press-down */
+
+@media (max-width:36rem){
+  .nav-name{display:none}
+  nav a{font-size:.75rem}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. SECTIONS
+   ══════════════════════════════════════════════════════════════ */
+
+section{position:relative}
+.dark{background:var(--ink);color:var(--paper)}
+.light{background:var(--paper);color:var(--ink)}
+.wrap{padding:clamp(5rem,13vh,9rem) var(--gutter)}
+
+/* ── Full-bleed frames (black & white) ──
+   The first of these is the top of the page. */
+.frame{position:relative;height:100svh;min-height:32rem;overflow:hidden}
+/* The wipe lives on a child, never on .frame itself: a clipped
+   element has an empty intersection rect, so an observer watching
+   it could never fire to remove its own clip. */
+.frame-clip{position:absolute;inset:0;clip-path:inset(0 0 100% 0)}
+.frame.seen .frame-clip{clip-path:inset(0 0 0 0);transition:clip-path 1.15s cubic-bezier(.62,.02,.16,1)}
+/* Parallax on its own wrapper, reveal scale on the image, so the
+   two transforms compose instead of overwriting each other. */
+.frame-inner{position:absolute;inset:-4% 0;will-change:transform}
+/* No CSS filter here on purpose. The greyscale, contrast and
+   brightness are baked into chapel-bw.jpg, because re-applying a
+   filter to a 1500px image every frame while it is being parallaxed
+   is the single most expensive thing this page could do on scroll.
+   No will-change either — the scale runs once on reveal, and a
+   permanent hint just holds a second large layer alongside the
+   parallax wrapper's. */
+.frame img{
+  width:100%;height:100%;object-fit:cover;
+  object-position:center;
+  transform:scale(1.14);
+}
+.frame.seen img{transform:scale(1);transition:transform 1.9s cubic-bezier(.22,1,.28,1)}
+
+.frame-caption{
+  position:absolute;left:var(--gutter);right:var(--gutter);
+  bottom:clamp(2rem,7vh,4rem);z-index:2;
+  color:#fff;text-shadow:0 1px 24px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(1rem);
+}
+/* Caption follows the wipe rather than leading it — the photograph
+   arrives first, then the words about it. */
+.frame.seen .frame-caption{
+  opacity:1;transform:none;
+  transition:opacity .7s var(--ease-out) .55s,transform .8s var(--ease-out) .55s;
+}
+.frame-caption .label{color:rgba(255,255,255,.62);margin-bottom:.85rem}
+.frame-caption .h3{max-width:24ch}
+
+/* Scrim only where type sits over the image, not a blanket dim. */
+.frame::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:48%;
+  background:linear-gradient(transparent,rgba(0,0,0,.62));pointer-events:none;
+}
+/* Where the photograph carries its own strong subject at the
+   bottom, the caption moves to the clean end of the frame. */
+.frame.cap-top .frame-caption{
+  /* Floor of 6rem keeps the label clear of the fixed nav on narrow
+     viewports, where the gutter alone is not enough. */
+  top:clamp(6rem,calc(var(--gutter) + 4.5rem),10rem);bottom:auto;
+}
+.frame.cap-top::after{
+  inset:0 0 auto 0;height:44%;
+  background:linear-gradient(rgba(0,0,0,.66),transparent);
+}
+
+/* A portrait frame crops this landscape photo to about a third of
+   its width, and centred that lands left of the roof cross. Pushing
+   the crop window right slides the picture left until the cross sits
+   in the middle. Must come after the .frame img rule above — equal
+   specificity, so source order decides. */
+@media (max-width:36rem){
+  .frame img{object-position:85% center}
+}
+
+/* ── Editorial blocks ── */
+.lede{margin-top:2rem;color:var(--ink-60)}
+.dark .lede{color:var(--paper-60)}
+
+.cols{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(17rem,100%),1fr));
+  gap:clamp(2rem,4.5vw,3.5rem);margin-top:clamp(3rem,8vh,4.5rem);
+}
+.col .label{color:var(--ink-40);margin-bottom:1rem}
+.dark .col .label{color:var(--paper-40)}
+.col p{margin:.5rem 0 0;line-height:1.62;font-size:1rem;color:var(--ink-60)}
+.dark .col p{color:var(--paper-60)}
+.col .h3{letter-spacing:-.02em}
+
+/* ── Directions ──
+   A live map, square and centred, so people can actually route to
+   the door rather than squint at a picture of a map. */
+.mapblock{margin:clamp(3rem,9vh,5.5rem) auto 0;max-width:min(52rem,92vw);text-align:center}
+.map-frame{
+  position:relative;aspect-ratio:1;
+  overflow:hidden;border-radius:8px;
+  border:1px solid var(--ink-12);
+  background:#e9e9e9;
+}
+.map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mapblock figcaption{
+  margin:clamp(1.75rem,4vh,2.5rem) auto 0;
+  max-width:var(--measure);
+  font-size:1rem;line-height:1.62;color:var(--ink-60);
+  text-align:left;
+}
+.directions{
+  display:flex;flex-wrap:wrap;gap:.75rem;
+  justify-content:center;
+  margin-top:1.75rem;
+}
+.btn{
+  display:inline-block;
+  padding:.7rem 1.15rem;
+  border:1px solid var(--ink-12);border-radius:999px;
+  font-size:.875rem;font-weight:500;letter-spacing:-.01em;
+  color:var(--ink);text-decoration:none;
+  transition:background .25s var(--ease-out),border-color .25s var(--ease-out),opacity .18s var(--ease-out);
+}
+.btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn:active{opacity:.6;transition-duration:0s} /* feedback on press-down */
+
+/* ── Contact / give ── */
+/* Inherits the section's colour so it reads correctly on both the
+   light and the dark grounds without a second rule per section. */
+.big-link{
+  display:inline-block;margin-top:.35rem;
+  font-size:clamp(1.0625rem,1.8vw,1.375rem);
+  letter-spacing:-.02em;font-weight:600;
+  color:inherit;text-decoration:none;
+  border-bottom:1px solid var(--ink-40);
+  padding-bottom:.1em;
+  transition:border-color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.dark .big-link{border-bottom-color:var(--paper-40)}
+.big-link:hover{border-bottom-color:currentColor}
+.big-link:active{opacity:.55;transition-duration:0s}
+
+address{font-style:normal}
+
+/* ── Footer ── */
+footer{padding:clamp(3rem,8vh,5rem) var(--gutter) 2.5rem;border-top:1px solid var(--paper-12)}
+.foot-row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:2rem}
+.foot-mark{width:6.5rem}
+.foot-meta{color:var(--paper-40);font-size:.75rem;letter-spacing:.02em;line-height:1.85}
+.foot-meta a{color:var(--paper-60);text-decoration:none;border-bottom:1px solid var(--paper-12)}
+.foot-meta a:hover{color:var(--paper)}
+
+/* ── Reveal primitive ── */
+.rise{opacity:0;transform:translateY(1.75rem)}
+.rise.seen{opacity:1;transform:none;transition:opacity .75s var(--ease-out),transform .85s var(--ease-out)}
+.rise.d1{transition-delay:.08s}
+.rise.d2{transition-delay:.16s}
+.rise.d3{transition-delay:.24s}
+html:not(.js) .rise{opacity:1;transform:none}
+html:not(.js) .frame-clip{clip-path:none}
+html:not(.js) .frame img{transform:none}
+html:not(.js) .frame-caption{opacity:1;transform:none}
+
+/* ══════════════════════════════════════════════════════════════
+   4. ACCESSIBILITY
+   Reduced motion is a gentler equivalent, not the absence of
+   feedback: cross-fades stay, travel and parallax go.
+   ══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.2s !important}
+  .rise,.frame-caption{transform:none !important}
+  .frame-clip{clip-path:none !important}
+  .frame img{transform:none !important}
+  .frame-caption{opacity:1}
+  .beat .c{filter:none !important;transform:none !important}
+  .beat-mark{filter:none}
+  #intro.lift{transform:none;opacity:0}
+}
+@media (prefers-reduced-transparency:reduce){
+  nav{background:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
+  nav.on-light{background:var(--paper)}
+}
+@media (prefers-contrast:more){
+  :root{--paper-60:rgba(255,255,255,.85);--paper-40:rgba(255,255,255,.7);--ink-60:rgba(11,11,11,.85)}
+  nav{background:var(--ink);backdrop-filter:none}
+}
+
+:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO ══════════════════════════════════════════════════ -->
+<div id="intro" role="presentation" aria-hidden="true">
+
+  <div class="intro-stage">
+    <div class="beat" id="beat1" data-text="Hello There"></div>
+    <div class="beat" id="beat2" data-text="Welcome to"></div>
+    <img class="beat-mark" id="beat3" src="assets/logo-white.png" alt="">
+    <div class="beat" id="beat4" data-text="A place where Christ is most important and people are deeply loved."></div>
+  </div>
+
+  <div class="intro-skip" id="skip">Tap to skip</div>
+</div>
+
+<!-- ══ SITE ═══════════════════════════════════════════════════ -->
+<div id="site">
+
+  <nav id="nav" aria-label="Primary">
+    <a class="nav-brand" href="#top">
+      <img class="nav-mark" src="assets/logo-white.png" alt="">
+      <span class="nav-name">Grove Church Midland</span>
+    </a>
+    <div class="nav-links">
+      <a href="#sunday">Service Info</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="#give">Support</a>
+    </div>
+  </nav>
+
+  <!-- The chapel frame is the hero now. The service details it used
+       to sit above are all still in Service Info below. -->
+  <section id="top" class="frame cap-top" data-frame>
+    <h1 class="sr">Grove Church Midland</h1>
+    <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/chapel-bw.jpg" alt="The chapel steeple and roof cross under snow against a clear sky"></div></div>
+    <div class="frame-caption">
+      <p class="label">200 W. Grove St.</p>
+      <p class="h3">In the heart of Midland. Doors open at half past nine.</p>
+    </div>
+  </section>
+
+  <!-- Sunday / Service Info -->
+  <section id="sunday" class="light">
+    <div class="wrap">
+      <p class="label rise" style="color:var(--ink-40);margin-bottom:1.75rem">Service info</p>
+      <h2 class="h2 rise d1" style="max-width:16ch">We gather weekly at 10am to worship.</h2>
+      <p class="body lede rise d2">
+        Doors are open at 9:30am for coffee and connecting with others
+        before service.
+      </p>
+
+      <div class="cols">
+        <div class="col rise">
+          <p class="label">Sunday worship</p>
+          <p class="h3">10:00 am, every week</p>
+          <p>Coffee is on and ready in the basement at 9:30 am for those who want to come early.</p>
+        </div>
+        <div class="col rise d1">
+          <p class="label">Childcare</p>
+          <p class="h3">Not currently offered</p>
+          <p>Families are welcome to worship together on Sundays.</p>
+        </div>
+        <div class="col rise d2">
+          <p class="label">Community on Sundays</p>
+          <p class="h3">Before and after</p>
+          <p>Sunday service is a significant part of being together, but not the end all to our gatherings. There are coffee shops and restaurants a block or two away, and Grove Park is a few steps from the door — play areas and a basketball court included.</p>
+        </div>
+      </div>
+
+      <figure class="mapblock rise">
+        <div class="map-frame">
+          <iframe
+            src="https://maps.google.com/maps?q=200%20W%20Grove%20St%2C%20Midland%2C%20MI%2048640&z=16&output=embed"
+            title="Map showing Grove Church Midland at 200 W. Grove St., Midland, Michigan"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="directions">
+          <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Google Maps</a>
+          <a class="btn" href="https://maps.apple.com/?daddr=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Apple Maps</a>
+        </div>
+
+        <figcaption>
+          The front of the church on Gordon Street is for drop-off only.
+          Parking is in the back lot, or street parking on Fitzhugh and
+          Grove. Grove Park has plenty of space as well. Please try not to
+          park at businesses that are open on Sundays — thank you.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="dark">
+    <div class="wrap">
+      <p class="label rise" style="color:var(--paper-40);margin-bottom:1.75rem">About us</p>
+      <h2 class="h2 rise d1" style="max-width:15ch">Mission, vision, and what we believe.</h2>
+
+      <div class="cols">
+        <div class="col rise">
+          <p class="label">Mission</p>
+          <p class="body" style="font-size:1.0625rem;margin-top:.75rem">
+            For the church to grow as Christ's disciples understanding we
+            are called according to His purpose.
+          </p>
+        </div>
+        <div class="col rise d1">
+          <p class="label">Vision</p>
+          <p class="body" style="font-size:1.0625rem;margin-top:.75rem">
+            That the church would grow in the love we have for Christ and
+            the love we have for one another while fulfilling our call to
+            be the light of Christ within our world.
+          </p>
+        </div>
+      </div>
+
+      <div class="rise d2" style="margin-top:clamp(3rem,8vh,4.5rem);padding-top:clamp(2rem,5vh,3rem);border-top:1px solid var(--paper-12)">
+        <p class="label" style="color:var(--paper-40);margin-bottom:1.25rem">Beliefs</p>
+        <p class="body" style="color:var(--paper-60)">
+          We believe that the whole universe was created by God. We believe
+          He created mankind in His image to have a deep and loving
+          relationship with. We believe that sin has separated mankind from
+          that relationship and that sin deserves God's judgment and
+          punishment. But instead of His wrath, He desired to show mercy and
+          grace because of His love for humanity.
+        </p>
+        <p class="body" style="color:var(--paper-60);margin-top:1.25rem">
+          This love was shown to us when He crushed His one and only Son,
+          Jesus, on the cross for our sin. We believe that those who put
+          their faith in Christ and His sacrifice are forgiven of sin,
+          receive the Holy Spirit, and have eternal life. We know this to be
+          certain because Jesus has risen from the dead conquering sin and
+          death giving everlasting life to all who hope in Him. We believe
+          He is the only way of salvation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="light">
+    <div class="wrap">
+      <p class="label rise" style="color:var(--ink-40);margin-bottom:1.75rem">Contact</p>
+      <h2 class="h2 rise d1" style="max-width:14ch">Come as you are.</h2>
+
+      <div class="cols">
+        <div class="col rise">
+          <p class="label">Where</p>
+          <address class="h3">200 W. Grove St.<br>Midland, MI 48640</address>
+        </div>
+        <div class="col rise d1">
+          <p class="label">Email</p>
+          <a class="big-link" href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
+        </div>
+        <div class="col rise d2">
+          <p class="label">Up to date info &amp; events</p>
+          <a class="big-link" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support -->
+  <section id="give" class="dark">
+    <div class="wrap">
+      <p class="label rise" style="color:var(--paper-40);margin-bottom:1.75rem">Support GCM</p>
+      <h2 class="h2 rise d1" style="max-width:20ch">Your generosity supports our mission to share the good news of Christ and care for others in our neighborhood.</h2>
+
+      <div class="cols">
+        <div class="col rise">
+          <p class="label">General giving</p>
+          <p class="h3">Online</p>
+          <p>Through Givebutter, with a PayPal option available. Note that the “tip” option can be removed.</p>
+        </div>
+        <div class="col rise d1">
+          <p class="label">In person</p>
+          <p class="h3">Offering box</p>
+          <p>Place your offering in the box located in the chapel.</p>
+        </div>
+        <div class="col rise d2">
+          <p class="label">By mail</p>
+          <p class="h3">Checks</p>
+          <p>Made out to Grove Church Midland<br>200 West Grove Street<br>Midland, MI 48640</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="dark">
+    <div class="foot-row">
+      <img class="foot-mark" src="assets/logo-white.png" alt="Grove Church Midland">
+      <div class="foot-meta">
+        <div>Grove Church Midland — 200 W. Grove St., Midland, MI 48640</div>
+        <div>Sunday worship 10:00 am — doors open 9:30 am</div>
+        <div>…and you will find rest for your souls. Matthew 11:29</div>
+        <div style="margin-top:.6rem">
+          <a href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
+          &nbsp;·&nbsp;
+          <a href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="assets/vendor/lenis.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ── Smooth scroll ─────────────────────────────────────────
+     Same Lenis settings as ethanlongmedia.com. Driven by a plain
+     rAF loop here rather than GSAP's ticker, since this page has no
+     GSAP. Lenis moves the real document, so the native scroll event
+     still fires and the nav inversion and parallax below keep
+     working unchanged. */
+  var lenis = null;
+  if (!reduced && typeof Lenis === "function"){
+    lenis = new Lenis({
+      duration: 1.15,
+      easing: function(t){ return Math.min(1, 1.001 - Math.pow(2, -10*t)); },
+      smoothWheel: true, syncTouch: false, touchMultiplier: 1.6
+    });
+    (function raf(time){ lenis.raf(time); requestAnimationFrame(raf); })(0);
+    lenis.stop();   /* held until the intro has cleared */
+    window.lenis = lenis;
+  }
+
+  /* Anchor jumps go through Lenis so they use the same easing, with
+     an offset that clears the fixed nav. */
+  document.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute("href");
+    if (id === "#") return;
+    var el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, {offset: -72});
+    else el.scrollIntoView({behavior: reduced ? "auto" : "smooth"});
+  });
+  var intro = document.getElementById("intro");
+  var site  = document.getElementById("site");
+  var nav   = document.getElementById("nav");
+  var skip  = document.getElementById("skip");
+
+  /* ── Intro ──────────────────────────────────────────────────
+     Beats are split per character so the letters resolve out of
+     blur individually, the way the reference does. Exits mirror
+     their entrances (up and out, having come up and in). */
+
+  function split(el){
+    var words = el.dataset.text.split(" ");
+    var total = el.dataset.text.replace(/ /g, "").length;
+    /* Hold the whole stagger to ~0.7s however long the line is: at a
+       fixed 28ms per character a full sentence would still be
+       arriving two seconds after it started. */
+    var step = Math.min(0.028, 0.7 / Math.max(total, 1));
+    var frag = document.createDocumentFragment(), i = 0;
+
+    words.forEach(function(word, wi){
+      var w = document.createElement("span");
+      w.className = "w";
+      for (var c = 0; c < word.length; c++){
+        var s = document.createElement("span");
+        s.className = "c";
+        s.textContent = word[c];
+        s.style.transitionDelay = (i++ * step) + "s";
+        w.appendChild(s);
+      }
+      frag.appendChild(w);
+      if (wi < words.length - 1) frag.appendChild(document.createTextNode(" "));
+    });
+    el.appendChild(frag);
+  }
+
+  var beat1 = document.getElementById("beat1");
+  var beat2 = document.getElementById("beat2");
+  var beat3 = document.getElementById("beat3");
+  var beat4 = document.getElementById("beat4");
+  split(beat1); split(beat2); split(beat4);
+
+  var timers = [], done = false;
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+
+  function revealSite(){
+    if (done) return;
+    done = true;
+    timers.forEach(clearTimeout);
+
+    site.classList.add("revealed");
+    intro.classList.add("lift");
+    document.documentElement.style.overflow = "";
+    /* Re-assert after the overflow lock lifts: releasing it is the
+       point at which a restored scroll position can take effect. */
+    scrollTo(0, 0);
+    /* Lenis measured the page while html was overflow:hidden, so it
+       needs a resize once the lock is released or its scroll limit
+       is stale. */
+    if (lenis){ lenis.scrollTo(0, {immediate:true}); lenis.start(); lenis.resize(); }
+
+    setTimeout(function(){
+      intro.hidden = true;
+      nav.classList.add("show");
+      onScroll();
+    }, reduced ? 220 : 900);
+  }
+
+  /* When the intro is going to play it must lift onto the top of
+     the page, not onto wherever a reload restored the scroll. */
+  function pinToTop(){
+    try { history.scrollRestoration = "manual"; } catch(e){}
+    scrollTo(0, 0);
+    if (lenis) lenis.scrollTo(0, {immediate:true});
+  }
+
+  function armSkip(){
+    /* Interruptible: the intro never holds the user hostage. */
+    intro.addEventListener("click", revealSite);
+    addEventListener("keydown", function(e){
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") revealSite();
+    });
+    addEventListener("wheel", revealSite, {passive:true, once:true});
+    addEventListener("touchmove", revealSite, {passive:true, once:true});
+  }
+
+  function runIntro(){
+    pinToTop();
+    document.documentElement.style.overflow = "hidden";
+
+    /* Each line holds well past the point it has finished arriving,
+       so it can actually be read, and the 500ms gap between beats
+       lets one finish fading before the next starts. */
+    at(150,  function(){ beat1.classList.add("in"); });
+    at(1550, function(){ beat1.classList.remove("in"); beat1.classList.add("out"); });
+
+    at(2050, function(){ beat2.classList.add("in"); });
+    at(3450, function(){ beat2.classList.remove("in"); beat2.classList.add("out"); });
+
+    /* Long enough for the 1.5s push to finish and sit still for a
+       beat before it goes — otherwise it fades mid-zoom and never
+       reads as coming to a stop. */
+    at(3950, function(){ beat3.classList.add("in"); });
+    at(6150, function(){ beat3.classList.remove("in"); beat3.classList.add("out"); });
+
+    /* The statement closes the intro, in the same type and the same
+       letter-by-letter resolve as the two lines before the mark. It
+       is a whole sentence, so it gets by far the longest hold. */
+    at(6650,  function(){ beat4.classList.add("in"); });
+    at(10550, function(){ beat4.classList.remove("in"); beat4.classList.add("out"); });
+
+    at(900,   function(){ skip.classList.add("show"); });
+    at(11050, revealSite);
+    armSkip();
+  }
+
+  /* Plays every load, including a refresh — no once-per-session gate. */
+  if (reduced){
+    /* The same three beats, without the travel. */
+    pinToTop();
+    document.documentElement.style.overflow = "hidden";
+    beat1.classList.add("in");
+    at(1500, function(){ beat1.classList.remove("in"); beat2.classList.add("in"); });
+    at(3000, function(){ beat2.classList.remove("in"); beat3.classList.add("in"); });
+    at(5000, function(){ beat3.classList.remove("in"); beat4.classList.add("in"); });
+    at(9000, revealSite);
+    armSkip();
+  } else {
+    runIntro();
+  }
+
+  /* ── Reveal on scroll ─────────────────────────────────────── */
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        en.target.classList.add("seen");
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold:0.08, rootMargin:"0px 0px -8% 0px"});
+
+  document.querySelectorAll(".rise,.frame").forEach(function(el){ io.observe(el); });
+
+  /* ── Nav: invert over light sections ───────────────────────
+     Sampled against the nav's own lower edge so the flip happens
+     as the boundary passes under it, not early or late. */
+
+  /* Geometry is measured once and on resize, never per frame. With
+     Lenis the scroll event fires every frame, and a
+     getBoundingClientRect() in that path forces a layout read on
+     each one — which is what makes a smooth-scrolled page feel
+     gritty even at 60fps. */
+  var lights  = [].slice.call(document.querySelectorAll("section.light"))
+                  .map(function(s){ return {el:s, top:0, bottom:0}; });
+  var navEdge = 0;
+  var ticking = false;
+
+  function measureNav(){
+    navEdge = nav.offsetHeight * 0.6;
+    lights.forEach(function(l){
+      l.top    = l.el.offsetTop;
+      l.bottom = l.top + l.el.offsetHeight;
+    });
+  }
+
+  function onScroll(){
+    var y = scrollY + navEdge, onLight = false;
+    for (var i = 0; i < lights.length; i++){
+      if (lights[i].top <= y && lights[i].bottom > y){ onLight = true; break; }
+    }
+    nav.classList.toggle("on-light", onLight);
+    ticking = false;
+  }
+
+  addEventListener("scroll", function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(onScroll); }
+  }, {passive:true});
+  addEventListener("resize", function(){ measureNav(); onScroll(); }, {passive:true});
+  /* Re-measure once late: the map iframe and images settle after
+     first paint and shift everything below them. */
+  addEventListener("load", function(){ measureNav(); onScroll(); });
+  measureNav();
+  onScroll();
+
+  /* ── Parallax on the full-bleed frames ─────────────────────
+     Compositor-only (transform), driven off rAF rather than the
+     scroll event, and disabled outright under reduced motion. */
+
+  if (!reduced && matchMedia("(min-width: 48rem)").matches){
+    var frames = [].slice.call(document.querySelectorAll("[data-frame]"))
+                   .map(function(f){
+                     return {inner:f.querySelector(".frame-inner"), el:f, top:0, h:0};
+                   });
+    var raf = false;
+
+    function measureFrames(){
+      frames.forEach(function(f){ f.top = f.el.offsetTop; f.h = f.el.offsetHeight; });
+    }
+
+    /* Same rule as above: offsets are cached, so the per-frame work
+       is arithmetic and one compositor-only transform write. */
+    function parallax(){
+      var vh = innerHeight, y = scrollY;
+      for (var i = 0; i < frames.length; i++){
+        var f = frames[i], top = f.top - y;
+        if (top + f.h < 0 || top > vh) continue;
+        /* -1 → 1 across the frame's travel through the viewport */
+        var p = (top + f.h/2 - vh/2) / (vh/2 + f.h/2);
+        f.inner.style.transform = "translate3d(0," + (p * -4) + "%,0)";
+      }
+      raf = false;
+    }
+
+    addEventListener("scroll", function(){
+      if (!raf){ raf = true; requestAnimationFrame(parallax); }
+    }, {passive:true});
+    addEventListener("resize", function(){ measureFrames(); parallax(); }, {passive:true});
+    addEventListener("load", function(){ measureFrames(); parallax(); });
+    measureFrames();
+    parallax();
+  }
+
+})();
+</script>
+</body>
+</html>
