@@ -754,6 +754,58 @@ footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
    typing — that is what makes inline validation feel like nagging. */
 .field.bad input,.field.bad textarea{border-bottom-color:#ff8a8a}
 
+/* ── Scroll cue ────────────────────────────────────────────────
+   Bottom right of the chapel, set vertically so it reads as an
+   arrow of type pointing the way down. The bottom right of that
+   photograph is bright snowy roof, so rather than dimming the whole
+   picture with a scrim it carries its own soft pool of shade —
+   enough to hold white type, invisible as a shape. */
+.scroll-cue{
+  position:absolute;z-index:3;
+  right:var(--gutter);bottom:clamp(var(--s-4),7vh,var(--s-6));
+  display:flex;flex-direction:column;align-items:center;gap:var(--s-2);
+  color:#fff;
+  opacity:0;transform:translateY(.5rem);
+  transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);
+}
+.scroll-cue.show{opacity:1;transform:none}
+.scroll-cue.gone{opacity:0;transform:translateY(.5rem);transition-duration:.35s}
+.scroll-cue::before{
+  content:"";position:absolute;inset:-3.5rem -5rem -2.5rem;z-index:-1;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.42),rgba(0,0,0,.16) 45%,transparent 75%);
+  pointer-events:none;
+}
+.cue-word{
+  writing-mode:vertical-rl;
+  font-family:var(--sans);font-size:var(--t-label);font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;
+  text-shadow:0 1px 3px rgba(0,0,0,.55),0 1px 14px rgba(0,0,0,.4);
+}
+
+/* A lit segment falling down a faint track, then a beat of rest
+   before it goes again — the pause is what keeps it from reading
+   as a busy loading spinner. */
+.cue-track{
+  position:relative;width:1px;height:3.5rem;
+  background:rgba(255,255,255,.3);overflow:hidden;
+}
+.cue-track::after{
+  content:"";position:absolute;left:0;top:0;width:1px;height:35%;
+  background:#fff;
+  animation:cue-fall 2.6s cubic-bezier(.5,0,.35,1) infinite;
+}
+@keyframes cue-fall{
+  0%       {transform:translateY(-100%);opacity:0}
+  12%      {opacity:1}
+  62%      {transform:translateY(300%);opacity:1}
+  70%,100% {transform:translateY(300%);opacity:0}
+}
+@media (prefers-reduced-motion:reduce){
+  /* The cue still says "scroll"; it just stops moving. */
+  .cue-track::after{animation:none;opacity:1;height:100%;background:rgba(255,255,255,.55)}
+}
+@media (max-width:36rem){ .scroll-cue{display:none} }
+
 /* ── Reveal primitive ── */
 .rise{opacity:0;transform:translateY(1.75rem)}
 .rise.seen{opacity:1;transform:none;transition:opacity .75s var(--ease-out),transform .85s var(--ease-out)}
@@ -832,6 +884,10 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   <section id="top" class="frame plain" data-frame>
     <h1 class="sr">Grove Church Midland</h1>
     <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/chapel-bw.jpg" alt="The chapel steeple and roof cross under snow against a clear sky"></div></div>
+    <div class="scroll-cue" id="cue" aria-hidden="true">
+      <span class="cue-word">Scroll</span>
+      <span class="cue-track"></span>
+    </div>
   </section>
 
   <!-- Mission / Vision / Beliefs, straight after the chapel. Four
@@ -1100,6 +1156,8 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     setTimeout(function(){
       intro.hidden = true;
       nav.classList.add("show");
+      var c = document.getElementById("cue");
+      if (c) c.classList.add("show");
       onScroll();
     }, reduced ? 220 : 900);
   }
@@ -1262,6 +1320,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
      getBoundingClientRect() in that path forces a layout read on
      each one — which is what makes a smooth-scrolled page feel
      gritty even at 60fps. */
+  var cue     = document.getElementById("cue");
   var lights  = [].slice.call(document.querySelectorAll("section.light"))
                   .map(function(s){ return {el:s, top:0, bottom:0}; });
   var navEdge = 0;
@@ -1281,6 +1340,8 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       if (lights[i].top <= y && lights[i].bottom > y){ onLight = true; break; }
     }
     nav.classList.toggle("on-light", onLight);
+    /* Once you have started moving the cue has done its job. */
+    if (cue) cue.classList.toggle("gone", scrollY > 60);
     ticking = false;
   }
 
