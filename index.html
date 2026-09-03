@@ -528,27 +528,21 @@ section{position:relative}
 .creed .h3{margin-bottom:var(--s-2)}
 .creed p{margin:0;color:var(--paper-body);font-size:var(--t-0);line-height:1.62}
 
-/* The word sits between the two paragraphs rather than above them,
-   in its own track, so they read as a pair either side of it. */
+/* The title sits at the left of the block with both paragraphs
+   paired beneath it — the same heading-over-text shape as Mission
+   and Vision, so all three read the same way. */
 .creed-beliefs{display:grid;gap:var(--s-3)}
-/* Padding on the word's own track, not a changed column ratio —
-   it shifts the title left of centre while both paragraphs stay
-   exactly equal in width. */
-.creed-word{margin-bottom:0;align-self:start;padding-right:var(--s-6)}
+.creed-word{grid-column:1/-1;margin-bottom:0}
 
 @media (min-width:64rem){
   .creed-stack  {grid-column:span 4;justify-content:space-between}
   .creed-beliefs{
     grid-column:span 8;
-    grid-template-columns:1fr auto 1fr;
-    gap:var(--s-2);align-items:start;
+    grid-template-columns:1fr 1fr;
+    column-gap:var(--s-4);row-gap:var(--s-2);align-items:start;
     border-left:1px solid var(--paper-hair);
     padding-left:var(--s-5);
   }
-  /* The word holds the heading line, so the paragraphs either side
-     drop by exactly one heading to share a baseline with it.
-     Derived from the type scale, not measured off a screenshot. */
-  .creed-beliefs p{padding-top:calc(var(--t-2) * 1.22 + var(--s-2))}
 }
 
 /* ── Sunday ────────────────────────────────────────────────────
@@ -560,7 +554,7 @@ section{position:relative}
    not also pay bottom padding — that gap was the last piece of
    stray white space in the section. */
 #sunday .wrap{padding-bottom:0}
-.sunday-grid{align-items:stretch}
+.sunday-grid{align-items:stretch;padding-bottom:clamp(var(--s-5),6vh,var(--s-6))}
 .photo{margin:0}
 .photo img{width:100%;height:auto}
 .sunday-left,.sunday-right{grid-column:1/-1}
@@ -871,6 +865,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
         </div>
 
         <div class="creed-beliefs rise d1">
+          <h2 class="h3 creed-word">Beliefs</h2>
           <p>
             We believe that the whole universe was created by God. We believe
             He created mankind in His image to have a deep and loving
@@ -879,7 +874,6 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
             punishment. But instead of His wrath, He desired to show mercy and
             grace because of His love for humanity.
           </p>
-          <h2 class="h3 creed-word">Beliefs</h2>
           <p>
             This love was shown to us when He crushed His one and only Son,
             Jesus, on the cross for our sin. We believe that those who put
@@ -949,7 +943,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
 
         <div class="sc-contact rise d1">
           <p class="label">Contact</p>
-          <h2 class="h3">Contact us.</h2>
+          <h2 class="h3">Contact us</h2>
 
           <form class="cform" id="cform" novalidate>
             <label class="field">
