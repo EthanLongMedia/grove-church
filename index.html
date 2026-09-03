@@ -517,39 +517,34 @@ section{position:relative}
 .col .btn{margin-top:var(--s-3)}
 .col .cta{margin:var(--s-2) 0 var(--s-3)}
 
-/* About: the same 4+4+4, but its three columns are peers with no
-   eyebrow above them, so they get their own row rhythm. */
-.trio{row-gap:var(--s-5);margin-top:0}
-.trio .h3{margin-bottom:var(--s-2)}
-.trio p + p{margin-top:var(--s-2)}
+/* ── Mission / Vision / Beliefs ────────────────────────────────
+   Four text blocks at one size. Beliefs used to be a single column
+   carrying two long paragraphs, which is exactly why it had to be
+   set small while Mission sat large — the sizes were compensating
+   for wildly different lengths. Split into its own two paragraphs,
+   every block lands close enough that one size serves all four and
+   the compensation is no longer needed. Mission and Vision take
+   three columns each; the two Beliefs paragraphs share the other
+   six. */
+.creed{row-gap:var(--s-6);align-items:start}
+.creed-col,.creed-beliefs{grid-column:1/-1}
+.creed .h3{margin-bottom:var(--s-2)}
+.creed p{margin:0;color:var(--paper-body);font-size:var(--t-0);line-height:1.62}
 
-/* Desktop only. Each column's type is sized against how much text it
-   carries — Mission has one sentence and Beliefs has two paragraphs,
-   so at a single size Mission is stranded at the top of an empty
-   column. Sizing them inversely lets all three fill their space.
-   Leading tightens and tracking goes more negative as the size
-   grows; display type set at body values falls apart. Stacked on
-   mobile there is no empty column to fill, so this does not apply. */
+/* The word sits between the two paragraphs rather than above them,
+   in its own track, so they read as a pair either side of it. */
+.creed-beliefs{display:grid;gap:var(--s-3)}
+.creed-word{margin-bottom:0;align-self:start}
+
 @media (min-width:64rem){
-  /* A three-step stair, largest first. Size carries importance as
-     well as fit: Mission is the one sentence the other two
-     elaborate on, Vision expands it, Beliefs is the long
-     doctrinal detail. Mission and Vision are short enough to take
-     the serif at display size; Beliefs is two full paragraphs and
-     stays in the workhorse face at reading size, which is what
-     keeps the step between the second and third columns wide
-     enough to read as deliberate. */
-  .trio .col:nth-child(1) p{
-    font-family:var(--serif);
-    font-size:var(--t-3);line-height:1.14;letter-spacing:-.02em;
-  }
-  .trio .col:nth-child(2) p{
-    font-family:var(--serif);
-    font-size:var(--t-3);line-height:1.14;letter-spacing:-.02em;
-  }
-  .trio .col:nth-child(3) p{
-    font-size:var(--t-0);line-height:1.62;letter-spacing:-.003em;
-  }
+  .creed-col    {grid-column:span 3}
+  .creed-beliefs{grid-column:span 6;grid-template-columns:1fr auto 1fr;gap:var(--s-4);align-items:start}
+  /* The word holds the heading line with Mission and Vision, so the
+     paragraphs either side of it have to drop by exactly one heading
+     to share a baseline with the other columns' text. Derived from
+     the type scale, not measured off a screenshot, so it survives the
+     heading changing size. */
+  .creed-beliefs p{padding-top:calc(var(--t-2) * 1.22 + var(--s-2))}
 }
 
 /* ── Sunday: two photographs, then the map ────────────────────
@@ -806,22 +801,70 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     <!-- No Contact link: that section is gone, and its email and
          Facebook now live in the footer. -->
     <div class="nav-links">
-      <a href="#sunday">Service Info</a>
       <a href="#about">About</a>
+      <a href="#sunday">Service Info</a>
       <a href="#give">Support</a>
     </div>
   </nav>
 
-  <!-- The chapel frame is the hero. Where the CTA used to sit, the
-       address and the service time now stand as plain type — the two
-       things a first-time visitor actually needs, and the only words
-       on any photograph on the page. -->
-  <section id="top" class="frame cap-top" data-frame>
+  <!-- The chapel, and nothing written on it. No words means no scrim
+       either — that gradient only ever existed to carry type. -->
+  <section id="top" class="frame plain" data-frame>
     <h1 class="sr">Grove Church Midland</h1>
     <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/chapel-bw.jpg" alt="The chapel steeple and roof cross under snow against a clear sky"></div></div>
-    <div class="frame-caption">
-      <p class="label">200 W. Grove &nbsp;·&nbsp; 10 am</p>
-      <p class="h3">In the heart of Midland. Doors open at half past nine.</p>
+  </section>
+
+  <!-- Mission / Vision / Beliefs, straight after the chapel. Four
+       text blocks at one size, not three at three sizes: splitting
+       Beliefs into its own two paragraphs brought every block close
+       enough in length that sizing them differently no longer had
+       anything to do. The word "Beliefs" sits between its two
+       paragraphs rather than above them. -->
+  <section id="about" class="dark">
+    <div class="wrap">
+      <div class="grid creed">
+
+        <div class="creed-col rise">
+          <h2 class="h3">Mission</h2>
+          <p>
+            For the church to grow as Christ's disciples understanding we
+            are called according to His purpose.
+          </p>
+        </div>
+
+        <div class="creed-col rise d1">
+          <h2 class="h3">Vision</h2>
+          <p>
+            That the church would grow in the love we have for Christ and
+            the love we have for one another while fulfilling our call to
+            be the light of Christ within our world.
+          </p>
+        </div>
+
+        <div class="creed-beliefs rise d2">
+          <p>
+            We believe that the whole universe was created by God. We believe
+            He created mankind in His image to have a deep and loving
+            relationship with. We believe that sin has separated mankind from
+            that relationship and that sin deserves God's judgment and
+            punishment. But instead of His wrath, He desired to show mercy and
+            grace because of His love for humanity.
+          </p>
+
+          <h2 class="h3 creed-word">Beliefs</h2>
+
+          <p>
+            This love was shown to us when He crushed His one and only Son,
+            Jesus, on the cross for our sin. We believe that those who put
+            their faith in Christ and His sacrifice are forgiven of sin,
+            receive the Holy Spirit, and have eternal life. We know this to be
+            certain because Jesus has risen from the dead conquering sin and
+            death giving everlasting life to all who hope in Him. We believe
+            He is the only way of salvation.
+          </p>
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -838,8 +881,8 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
 
         <div class="sunday-right">
           <div class="rise d1">
-            <h2 class="h2">Before and after</h2>
-            <p class="body">Sunday service is a significant part of being together, but not the end all to our gatherings. There are coffee shops and restaurants a block or two away, and Grove Park is a few steps from the door — play areas and a basketball court included.</p>
+            <h2 class="h2">We gather weekly at 10 am to worship.</h2>
+            <p class="body">Doors will be open at 9:30 am for coffee and connecting with others before service.</p>
           </div>
           <figure class="photo rise d2">
             <img src="assets/photos/worship-bw.jpg" alt="A worship leader singing and playing guitar beside the chapel's stained glass window">
@@ -872,51 +915,6 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     </div>
   </section>
 
-  <!-- About — three even columns, no section heading and no rules.
-       The names carry it on their own. -->
-  <section id="about" class="dark">
-    <div class="wrap">
-      <div class="cols trio">
-        <div class="col rise">
-          <h2 class="h3">Mission</h2>
-          <p>
-            For the church to grow as Christ's disciples understanding we
-            are called according to His purpose.
-          </p>
-        </div>
-
-        <div class="col rise d1">
-          <h2 class="h3">Vision</h2>
-          <p>
-            That the church would grow in the love we have for Christ and
-            the love we have for one another while fulfilling our call to
-            be the light of Christ within our world.
-          </p>
-        </div>
-
-        <div class="col rise d2">
-          <h2 class="h3">Beliefs</h2>
-          <p>
-            We believe that the whole universe was created by God. We believe
-            He created mankind in His image to have a deep and loving
-            relationship with. We believe that sin has separated mankind from
-            that relationship and that sin deserves God's judgment and
-            punishment. But instead of His wrath, He desired to show mercy and
-            grace because of His love for humanity.
-          </p>
-          <p>
-            This love was shown to us when He crushed His one and only Son,
-            Jesus, on the cross for our sin. We believe that those who put
-            their faith in Christ and His sacrifice are forgiven of sin,
-            receive the Holy Spirit, and have eternal life. We know this to be
-            certain because Jesus has risen from the dead conquering sin and
-            death giving everlasting life to all who hope in Him. We believe
-            He is the only way of salvation.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Contact section removed — its email and Facebook are in the
        footer now, and both photographs moved up into Service Info. -->
