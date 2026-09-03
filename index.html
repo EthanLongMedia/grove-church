@@ -5,7 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Grove Church Midland</title>
 <meta name="description" content="A place where Christ is most important and people are deeply loved. Sunday worship at 10am — 200 W. Grove St., Midland, Michigan.">
+
 <link rel="icon" href="assets/logo-src.jpg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<!-- Type pairing (Fontshare). Two families, two jobs:
+     Sentient — a warm literary serif, set at 400. Carries every
+       heading and the intro beats. The voice of the page.
+     Switzer  — a Swiss grotesk. Body, labels, nav, buttons. The
+       delivery vehicle; it is not supposed to be noticed.
+     Two links, not one combined f[] query — the combined form
+     silently returns only the first family. -->
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=sentient@400,500&display=swap">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=switzer@400,500,600&display=swap">
+
+<!-- Social preview -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grove Church Midland">
+<meta property="og:title" content="Grove Church Midland">
+<meta property="og:description" content="A place where Christ is most important and people are deeply loved. Sunday worship at 10am — 200 W. Grove St., Midland, Michigan.">
+<meta property="og:image" content="https://ethanlongmedia.github.io/grove-church/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://ethanlongmedia.github.io/grove-church/">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Staging only. This is a near-copy of grovechurchmidland.com, and two
+     indexed copies would compete with each other, so search engines are
+     kept off this URL. REMOVE this tag (and robots.txt) the moment the
+     real domain points here — otherwise the live site stays invisible. -->
+<meta name="robots" content="noindex, nofollow">
 <script>
 document.documentElement.className="js";
 /* The intro plays on every load, so the page must always come up at
@@ -15,29 +46,86 @@ try{ history.scrollRestoration="manual"; }catch(e){}
 </script>
 <style>
 /* ============================================================
-   GROVE CHURCH MIDLAND
-   Colour intro, black-and-white site. System font (SF Pro on
-   Apple platforms) per Apple's "default to the platform font"
-   rule — it ships optical sizing and tracking tables already.
+   GROVE CHURCH MIDLAND — DESIGN SYSTEM
+
+   Every value on this page comes from one of the four scales
+   below. Nothing is eyeballed. If a size, colour or space is
+   needed that is not here, the scale is wrong — not the token.
    ============================================================ */
 
 :root{
-  --ink:#0B0B0B;         /* near-black, not pure — pure black clips on OLED */
-  --paper:#FFFFFF;
-  --ink-60:rgba(11,11,11,.60);
-  --ink-40:rgba(11,11,11,.40);
-  --ink-12:rgba(11,11,11,.12);
-  --paper-60:rgba(255,255,255,.60);
-  --paper-40:rgba(255,255,255,.40);
-  --paper-12:rgba(255,255,255,.12);
 
+  /* ── COLOUR ── two colours, 60 / 30 / 10 ────────────────────
+     60  GROUND     ink or paper, whichever the section is
+     30  TYPE       the opposite colour, stepped down by opacity
+     10  ACCENT     the inverted solid — the CTA, and nothing else
+
+     There is no third hue. Depth comes from opacity, so the
+     palette never grows. Every stop below carries its measured
+     contrast against its own ground; anything under 4.5:1 is a
+     hairline and is never allowed to carry text. */
+
+  --ink:#0B0B0B;          /* near-black, not pure — pure black clips on OLED */
+  --paper:#FFFFFF;
+                                        /*  on paper  |  on ink  */
+  --ink-body:rgba(11,11,11,.62);        /*   5.6:1    secondary prose */
+  --ink-mute:rgba(11,11,11,.58);        /*   4.9:1    small caps labels */
+  --ink-hair:rgba(11,11,11,.12);        /*   rules only, never text */
+  --paper-body:rgba(255,255,255,.72);   /*             10.2:1  secondary prose */
+  --paper-mute:rgba(255,255,255,.62);   /*              7.7:1  small caps labels */
+  --paper-hair:rgba(255,255,255,.14);   /*   rules only, never text */
+
+  /* ── TYPE ── perfect fourth (1.333), 17px base ──────────────
+     Fluid, but still a scale: each step is the one below it
+     times 1.333 at full width. Tracking is size-specific —
+     display sizes take negative tracking (letters read too far
+     apart as they grow), body sits near 0, small caps take a
+     positive bump. Leading tightens as size grows. */
+
+  --serif:"Sentient",Georgia,"Times New Roman",serif;
+  --sans:"Switzer",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+
+  --t-label:.75rem;                              /* 12 — small caps */
+  --t-ui:.875rem;                                /* 14 — nav, controls */
+  --t-0:clamp(1.0625rem,.4vw + .97rem,1.1875rem); /* 17 → 19  body  */
+  --t-1:clamp(1.25rem,.9vw + 1.05rem,1.5625rem);  /* 20 → 25  lede  */
+  --t-2:clamp(1.5rem,1.6vw + 1.15rem,2.0625rem);  /* 24 → 33  h3    */
+  --t-3:clamp(1.875rem,3vw + 1.2rem,2.75rem);     /* 30 → 44  h2    */
+  --t-4:clamp(2.25rem,5vw + 1.1rem,3.625rem);     /* 36 → 58  intro */
+  --t-5:clamp(2.75rem,8vw + .9rem,5.9375rem);     /* 44 → 95  display */
+
+  /* ── SPACE ── 8pt base ──────────────────────────────────────
+     Every margin, gap and pad is a multiple of 8. Sizes that
+     used to be .35 / .85 / 1.15 / 1.75rem are gone; near-misses
+     are what make a layout feel hand-placed rather than set. */
+
+  --s-05:.75rem;  /* 12 — the one half-step, control padding only */
+  --s-1:.5rem;    /*  8 */
+  --s-2:1rem;     /* 16 */
+  --s-3:1.5rem;   /* 24 */
+  --s-4:2rem;     /* 32 */
+  --s-5:3rem;     /* 48 */
+  --s-6:4rem;     /* 64 */
+  --s-7:6rem;     /* 96 */
+  --s-8:8rem;     /* 128 */
+
+  /* ── GRID ── 12 / 8 / 4 ─────────────────────────────────────
+     Desktop 12, tablet 8, phone 4 — the standard three. Section
+     content is placed on it by span, so headings, columns and
+     captions all share one set of vertical edges. */
+
+  --cols:4;
+  --gap:var(--s-3);
   --gutter:clamp(1.25rem, 5vw, 5rem);
-  --measure:36rem;
+  --measure:36rem;      /* ~65 characters at body size */
 
   /* Apple spring approximations, for the non-gesture transitions */
   --ease-out:cubic-bezier(.16,1,.3,1);      /* critically damped feel */
   --ease-in:cubic-bezier(.7,0,.84,0);        /* mirror of the above  */
 }
+
+@media (min-width:36rem){ :root{--cols:8;  --gap:var(--s-4)} }
+@media (min-width:64rem){ :root{--cols:12; --gap:var(--s-5)} }
 
 *,*::before,*::after{box-sizing:border-box}
 /* No scroll-behavior:smooth — Lenis drives scrolling and the two
@@ -46,7 +134,7 @@ html{-webkit-text-size-adjust:100%}
 
 body{
   margin:0;
-  font:400 100%/1.5 system-ui,-apple-system,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font:400 var(--t-0)/1.65 var(--sans);
   font-optical-sizing:auto;
   background:var(--ink);
   color:var(--paper);
@@ -57,16 +145,28 @@ body{
 img{display:block;max-width:100%}
 ::selection{background:var(--paper);color:var(--ink)}
 
-/* ── Type scale ────────────────────────────────────────────────
-   Tracking is size-specific: display sizes take negative tracking
-   (letters read too far apart as they grow), body sits near 0,
-   small labels take a positive bump. Leading tracks size inversely. */
+/* ── Type roles ────────────────────────────────────────────────
+   Serif for anything that speaks, sans for anything that labels
+   or acts. The two never swap jobs — that consistency is what
+   makes the pairing read as a system rather than two fonts. */
 
-.display{font-size:clamp(2.5rem,8vw,7rem);line-height:.95;letter-spacing:-.045em;font-weight:600;margin:0}
-.h2{font-size:clamp(1.75rem,4.4vw,3.5rem);line-height:1.05;letter-spacing:-.032em;font-weight:600;margin:0}
-.h3{font-size:clamp(1.125rem,2vw,1.55rem);line-height:1.22;letter-spacing:-.018em;font-weight:600;margin:0}
-.body{font-size:clamp(1.0625rem,1.3vw,1.1875rem);line-height:1.65;letter-spacing:-.003em;margin:0;max-width:var(--measure)}
-.label{font-size:.75rem;line-height:1;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin:0}
+.display,.h2,.h3{
+  font-family:var(--serif);
+  font-weight:400;              /* a serif at 400 carries display size */
+  text-wrap:balance;
+  margin:0;
+}
+.display{font-size:var(--t-5);line-height:.98;letter-spacing:-.03em}
+.h2     {font-size:var(--t-3);line-height:1.08;letter-spacing:-.022em}
+.h3     {font-size:var(--t-2);line-height:1.22;letter-spacing:-.016em}
+
+.body{font-size:var(--t-0);line-height:1.65;letter-spacing:-.003em;margin:0;max-width:var(--measure)}
+.lede-type{font-family:var(--serif);font-size:var(--t-1);line-height:1.4;letter-spacing:-.014em}
+.label{
+  font-family:var(--sans);
+  font-size:var(--t-label);line-height:1;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:500;margin:0;
+}
 
 /* ══════════════════════════════════════════════════════════════
    1. INTRO
@@ -97,12 +197,13 @@ img{display:block;max-width:100%}
   transform:translate(-50%,-50%);
   width:min(92vw,56rem);
   text-align:center;
-  /* Roughly three times the reference's 17px. Leading tightens and
-     tracking goes more negative as it grows — display type set at
-     body values falls apart. */
-  font-size:clamp(2rem, 4.6vw, 3.25rem);
-  line-height:1.16;
-  letter-spacing:-.038em;
+  /* Step 4 of the scale. Set in the serif: the intro is the page
+     speaking, and the closing beat is the same sentence the site
+     is built around, so it should arrive in the site's voice. */
+  font-family:var(--serif);
+  font-size:var(--t-4);
+  line-height:1.18;
+  letter-spacing:-.024em;
   font-weight:400;
   color:var(--paper);
 }
@@ -161,11 +262,11 @@ img{display:block;max-width:100%}
 }
 
 .intro-skip{
-  position:absolute;bottom:clamp(1.5rem,5vh,2.75rem);left:50%;
+  position:absolute;bottom:clamp(var(--s-3),5vh,var(--s-4));left:50%;
   transform:translateX(-50%);
   z-index:3;
-  color:var(--paper-40);
-  font-size:.8125rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--paper-mute);
+  font-size:var(--t-label);letter-spacing:.11em;text-transform:uppercase;
   text-shadow:0 1px 12px rgba(0,0,0,.6);
   opacity:0;transition:opacity .5s var(--ease-out);
 }
@@ -190,8 +291,8 @@ html:not(.js) #intro{display:none}
 
 nav{
   position:fixed;top:0;left:0;right:0;z-index:50;
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding:.9rem var(--gutter);
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);
+  padding:var(--s-05) var(--gutter);
   /* Translucent functional layer — content scrolls underneath,
      rather than an opaque bar eating a fixed strip.
      A full-width backdrop-filter is re-rasterised on every scroll
@@ -202,7 +303,7 @@ nav{
   background:rgba(11,11,11,.72);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--paper-12);
+  border-bottom:1px solid var(--paper-hair);
   transform:translate3d(0,-100%,0);
   transition:transform .5s var(--ease-out),background .4s linear,border-color .4s linear;
 }
@@ -213,19 +314,19 @@ html:not(.js) nav{transform:translate3d(0,0,0)}
 
 /* Over light sections the chrome inverts, so it stays legible
    without ever becoming an opaque slab. */
-nav.on-light{background:rgba(255,255,255,.75);border-bottom-color:var(--ink-12)}
+nav.on-light{background:rgba(255,255,255,.75);border-bottom-color:var(--ink-hair)}
 nav.on-light .nav-mark{filter:brightness(0)} /* blackens RGB, keeps alpha */
 nav.on-light a,nav.on-light .nav-name{color:var(--ink)}
 nav.on-light a::after{background:var(--ink)}
 
-.nav-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--paper)}
+.nav-brand{display:flex;align-items:center;gap:var(--s-1);text-decoration:none;color:var(--paper)}
 .nav-mark{width:2rem;height:2rem;transition:filter .4s linear}
-.nav-name{font-size:.8125rem;letter-spacing:-.01em;font-weight:600;transition:color .4s linear}
+.nav-name{font-size:var(--t-ui);letter-spacing:-.01em;font-weight:600;transition:color .4s linear}
 
-.nav-links{display:flex;gap:clamp(.9rem,2.6vw,2.1rem)}
+.nav-links{display:flex;align-items:center;gap:clamp(var(--s-2),2.6vw,var(--s-4))}
 nav a{
   position:relative;color:var(--paper);text-decoration:none;
-  font-size:.8125rem;letter-spacing:-.006em;font-weight:500;padding:.25rem 0;
+  font-size:var(--t-ui);letter-spacing:-.006em;font-weight:500;padding:var(--s-1) 0;
   transition:color .4s linear,opacity .18s var(--ease-out);
 }
 /* Underline grows from the left — hinting in the direction of travel */
@@ -237,9 +338,23 @@ nav a::after{
 nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
 nav a:active{opacity:.55;transition-duration:0s} /* feedback on press-down */
 
+/* Below 832px the section links wrap to two lines and shove the CTA
+   off the right edge, so the bar drops them and keeps the brand and
+   the one action. A five-section page is navigated by scrolling, and
+   a bar carrying a single goal is the better conversion surface
+   anyway — the links all still exist in the footer. */
+@media (max-width:52rem){
+  .nav-links a:not(.cta){display:none}
+  /* With the links gone the bar's CTA is large and sits directly
+     above the frame's, two identical buttons a finger apart. One
+     goal, one button: the frame yields to the bar. Above this
+     width they are far apart and at different scales, which reads
+     as a pair rather than a duplicate. */
+  .frame-cta{display:none}
+}
 @media (max-width:36rem){
   .nav-name{display:none}
-  nav a{font-size:.75rem}
+  .cta,.btn{padding:var(--s-1) var(--s-2)}
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -249,7 +364,44 @@ nav a:active{opacity:.55;transition-duration:0s} /* feedback on press-down */
 section{position:relative}
 .dark{background:var(--ink);color:var(--paper)}
 .light{background:var(--paper);color:var(--ink)}
-.wrap{padding:clamp(5rem,13vh,9rem) var(--gutter)}
+.wrap{padding:clamp(var(--s-7),13vh,var(--s-8)) var(--gutter)}
+
+/* ── The grid ──────────────────────────────────────────────────
+   12 columns on desktop, 8 on tablet, 4 on phone. Everything in
+   a section sits on it, which is what puts the eyebrow, the
+   heading, the columns and the map on one shared left edge —
+   alignment doing the work that a rule or a box would otherwise
+   have to do. */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  column-gap:var(--gap);
+  row-gap:0;
+}
+/* Spans are declared mobile-first at the 4-column count, then
+   widened. A heading is deliberately narrower than the prose
+   block below it so the two have different silhouettes. */
+.span-full{grid-column:1/-1}
+.span-head{grid-column:1/-1}
+.span-text{grid-column:1/-1}
+@media (min-width:36rem){                  /* 8 columns  */
+  .span-head{grid-column:1/span 7}
+  .span-text{grid-column:1/span 6}
+}
+@media (min-width:64rem){                  /* 12 columns */
+  .span-head{grid-column:1/span 8}
+  .span-text{grid-column:1/span 6}
+}
+
+/* ── Proximity ────────────────────────────────────────────────
+   Related things sit close, unrelated things sit far apart, and
+   the gap sizes come from the 8pt scale. The eyebrow is 8px off
+   its heading because they are one unit; the block below is 48px
+   away because it is a different one. */
+.sec-head{margin-bottom:var(--s-6)}
+.sec-head .label{color:var(--ink-mute);margin-bottom:var(--s-1)}
+.dark .sec-head .label{color:var(--paper-mute)}
+.sec-head .h2{margin-top:var(--s-2)}
 
 /* ── Full-bleed frames (black & white) ──
    The first of these is the top of the page. */
@@ -278,7 +430,7 @@ section{position:relative}
 
 .frame-caption{
   position:absolute;left:var(--gutter);right:var(--gutter);
-  bottom:clamp(2rem,7vh,4rem);z-index:2;
+  bottom:clamp(var(--s-4),7vh,var(--s-6));z-index:2;
   color:#fff;text-shadow:0 1px 24px rgba(0,0,0,.5);
   opacity:0;transform:translateY(1rem);
 }
@@ -288,8 +440,11 @@ section{position:relative}
   opacity:1;transform:none;
   transition:opacity .7s var(--ease-out) .55s,transform .8s var(--ease-out) .55s;
 }
-.frame-caption .label{color:rgba(255,255,255,.62);margin-bottom:.85rem}
+.frame-caption .label{color:rgba(255,255,255,.72);margin-bottom:var(--s-2)}
 .frame-caption .h3{max-width:24ch}
+/* The CTA is in the first screenful, over the photograph, because
+   that is the only place a visitor is guaranteed to look. */
+.frame-cta{margin-top:var(--s-3);text-shadow:none}
 
 /* Scrim only where type sits over the image, not a blanket dim. */
 .frame::after{
@@ -301,7 +456,7 @@ section{position:relative}
 .frame.cap-top .frame-caption{
   /* Floor of 6rem keeps the label clear of the fixed nav on narrow
      viewports, where the gutter alone is not enough. */
-  top:clamp(6rem,calc(var(--gutter) + 4.5rem),10rem);bottom:auto;
+  top:clamp(var(--s-7),calc(var(--gutter) + var(--s-6)),10rem);bottom:auto;
 }
 .frame.cap-top::after{
   inset:0 0 auto 0;height:44%;
@@ -318,33 +473,33 @@ section{position:relative}
 }
 
 /* ── Editorial blocks ── */
-.lede{margin-top:2rem;color:var(--ink-60)}
-.dark .lede{color:var(--paper-60)}
+.lede{margin-top:var(--s-3);color:var(--ink-body)}
+.dark .lede{color:var(--paper-body)}
 
-.cols{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(17rem,100%),1fr));
-  gap:clamp(2rem,4.5vw,3.5rem);margin-top:clamp(3rem,8vh,4.5rem);
-}
-.col .label{color:var(--ink-40);margin-bottom:1rem}
-.dark .col .label{color:var(--paper-40)}
-.col p{margin:.5rem 0 0;line-height:1.62;font-size:1rem;color:var(--ink-60)}
-.dark .col p{color:var(--paper-60)}
-.col .h3{letter-spacing:-.02em}
-
-/* Three equal columns, aligned at the top. It steps straight to a
-   single column rather than through auto-fit, which would leave an
+/* Three columns on the 12-col grid: 4 + 4 + 4. At 8 columns they
+   each take the full 8 and stack, rather than breaking to an
    unbalanced 2-then-1 at middling widths. */
-.trio{
+.cols{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:clamp(2rem,4.5vw,4rem);
+  grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  column-gap:var(--gap);
+  row-gap:var(--s-6);
+  margin-top:var(--s-7);
   align-items:start;
 }
-.trio .h3{margin-bottom:1rem}
-.trio p + p{margin-top:1.15rem}
-@media (max-width:58rem){
-  .trio{grid-template-columns:1fr;gap:clamp(2.5rem,6vh,3.5rem)}
-}
+.col{grid-column:1/-1}
+@media (min-width:64rem){ .col{grid-column:span 4} }
+
+.col .label{color:var(--ink-mute);margin-bottom:var(--s-2)}
+.dark .col .label{color:var(--paper-mute)}
+.col p{margin:var(--s-1) 0 0;line-height:1.62;color:var(--ink-body)}
+.dark .col p{color:var(--paper-body)}
+
+/* About: the same 4+4+4, but its three columns are peers with no
+   eyebrow above them, so they get their own row rhythm. */
+.trio{row-gap:var(--s-5);margin-top:0}
+.trio .h3{margin-bottom:var(--s-2)}
+.trio p + p{margin-top:var(--s-2)}
 
 /* Desktop only. Each column's type is sized against how much text it
    carries — Mission has one sentence and Beliefs has two paragraphs,
@@ -353,29 +508,31 @@ section{position:relative}
    Leading tightens and tracking goes more negative as the size
    grows; display type set at body values falls apart. Stacked on
    mobile there is no empty column to fill, so this does not apply. */
-@media (min-width:58rem){
+@media (min-width:64rem){
+  /* Three consecutive steps of the scale, largest first. Size is
+     carrying importance here as well as fit: Mission is the one
+     sentence the other two elaborate on, so it is the one set
+     large — and at that size it takes the serif. */
   .trio .col:nth-child(1) p{
-    font-size:clamp(1.5rem,2.1vw,2rem);
-    line-height:1.24;letter-spacing:-.022em;
+    font-family:var(--serif);
+    font-size:var(--t-2);line-height:1.28;letter-spacing:-.016em;
   }
   .trio .col:nth-child(2) p{
-    font-size:clamp(1.1875rem,1.6vw,1.5rem);
-    line-height:1.34;letter-spacing:-.014em;
+    font-size:var(--t-1);line-height:1.4;letter-spacing:-.012em;
   }
   .trio .col:nth-child(3) p{
-    font-size:1rem;
-    line-height:1.62;letter-spacing:-.003em;
+    font-size:var(--t-0);line-height:1.62;letter-spacing:-.003em;
   }
 }
 
 /* ── Directions ──
    A live map, square and centred, so people can actually route to
    the door rather than squint at a picture of a map. */
-.mapblock{margin:clamp(3rem,9vh,5.5rem) auto 0;max-width:min(52rem,92vw);text-align:center}
+.mapblock{margin:clamp(var(--s-5),9vh,var(--s-7)) auto 0;max-width:min(52rem,92vw);text-align:center}
 .map-frame{
   position:relative;aspect-ratio:1;
   overflow:hidden;border-radius:8px;
-  border:1px solid var(--ink-12);
+  border:1px solid var(--ink-hair);
   background:#e9e9e9;
 }
 /* Inert until clicked. A live Google Maps iframe runs its own loop
@@ -389,34 +546,56 @@ section{position:relative}
 .map-frame.live iframe{pointer-events:auto}
 
 .map-hint{
-  position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);
+  position:absolute;left:50%;bottom:var(--s-2);transform:translateX(-50%);
   z-index:2;margin:0;
-  padding:.5rem .9rem;border-radius:999px;
+  padding:var(--s-1) var(--s-05);border-radius:999px;
   background:rgba(11,11,11,.74);color:#fff;
-  font-size:.75rem;letter-spacing:.02em;line-height:1;
+  font-size:var(--t-label);letter-spacing:.02em;line-height:1;
   pointer-events:none;
   transition:opacity .3s var(--ease-out);
 }
 .map-frame.live .map-hint{opacity:0}
 .mapblock figcaption{
-  margin:clamp(1.75rem,4vh,2.5rem) auto 0;
+  margin:clamp(var(--s-4),4vh,var(--s-5)) auto 0;
   max-width:var(--measure);
-  font-size:1rem;line-height:1.62;color:var(--ink-60);
+  font-size:var(--t-0);line-height:1.62;color:var(--ink-body);
   text-align:left;
 }
 .directions{
-  display:flex;flex-wrap:wrap;gap:.75rem;
+  display:flex;flex-wrap:wrap;gap:var(--s-2);
   justify-content:center;
-  margin-top:1.75rem;
+  margin-top:var(--s-4);
 }
-.btn{
+/* ── Actions ───────────────────────────────────────────────────
+   Two tiers, and only two. .cta is the 10% accent: a solid fill,
+   and the only solid fill anywhere on the page — which is what
+   makes it the loudest thing on any screen without a colour
+   being introduced to shout with. .btn is everything else.
+   If a third tier is ever wanted, the answer is no. */
+
+.cta,.btn{
   display:inline-block;
-  padding:.7rem 1.15rem;
-  border:1px solid var(--ink-12);border-radius:999px;
-  font-size:.875rem;font-weight:500;letter-spacing:-.01em;
-  color:var(--ink);text-decoration:none;
-  transition:background .25s var(--ease-out),border-color .25s var(--ease-out),opacity .18s var(--ease-out);
+  padding:var(--s-05) var(--s-3);
+  border-radius:999px;
+  font-family:var(--sans);
+  font-size:var(--t-ui);font-weight:500;letter-spacing:-.01em;
+  text-decoration:none;white-space:nowrap;
+  transition:background .25s var(--ease-out),border-color .25s var(--ease-out),
+             color .25s var(--ease-out),opacity .18s var(--ease-out);
 }
+
+/* Primary — inverted solid. Takes its colours from the section
+   it sits in, so one class works on both grounds. */
+.cta{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+.dark .cta,nav .cta,.frame .cta{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.cta:hover{opacity:.86}
+.cta:active{opacity:.66;transition-duration:0s}
+/* The nav CTA inverts with the bar as it crosses a light section. */
+nav.on-light .cta{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* Secondary — outline, never filled at rest. */
+.btn{border:1px solid var(--ink-hair);color:var(--ink);background:transparent}
+.dark .btn{border-color:var(--paper-hair);color:var(--paper)}
 .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .btn:active{opacity:.6;transition-duration:0s} /* feedback on press-down */
 
@@ -424,26 +603,27 @@ section{position:relative}
 /* Inherits the section's colour so it reads correctly on both the
    light and the dark grounds without a second rule per section. */
 .big-link{
-  display:inline-block;margin-top:.35rem;
-  font-size:clamp(1.0625rem,1.8vw,1.375rem);
+  display:inline-block;margin-top:var(--s-1);
+  font-size:var(--t-1);
   letter-spacing:-.02em;font-weight:600;
   color:inherit;text-decoration:none;
-  border-bottom:1px solid var(--ink-40);
+  border-bottom:1px solid var(--ink-mute);
   padding-bottom:.1em;
   transition:border-color .3s var(--ease-out),opacity .18s var(--ease-out);
 }
-.dark .big-link{border-bottom-color:var(--paper-40)}
+.dark .big-link{border-bottom-color:var(--paper-mute)}
 .big-link:hover{border-bottom-color:currentColor}
 .big-link:active{opacity:.55;transition-duration:0s}
 
 address{font-style:normal}
 
 /* ── Footer ── */
-footer{padding:clamp(3rem,8vh,5rem) var(--gutter) 2.5rem;border-top:1px solid var(--paper-12)}
-.foot-row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:2rem}
+footer{padding:clamp(var(--s-5),8vh,var(--s-7)) var(--gutter) var(--s-4);border-top:1px solid var(--paper-hair)}
+.foot-row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:var(--s-4)}
 .foot-mark{width:6.5rem}
-.foot-meta{color:var(--paper-40);font-size:.75rem;letter-spacing:.02em;line-height:1.85}
-.foot-meta a{color:var(--paper-60);text-decoration:none;border-bottom:1px solid var(--paper-12)}
+.foot-meta{color:var(--paper-mute);font-size:var(--t-label);letter-spacing:.02em;line-height:1.85}
+.foot-links{margin-top:var(--s-1)}
+.foot-meta a{color:var(--paper-body);text-decoration:none;border-bottom:1px solid var(--paper-hair)}
 .foot-meta a:hover{color:var(--paper)}
 
 /* ── Reveal primitive ── */
@@ -479,7 +659,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   nav.on-light{background:var(--paper)}
 }
 @media (prefers-contrast:more){
-  :root{--paper-60:rgba(255,255,255,.85);--paper-40:rgba(255,255,255,.7);--ink-60:rgba(11,11,11,.85)}
+  :root{--paper-body:rgba(255,255,255,.9);--paper-mute:rgba(255,255,255,.8);--ink-body:rgba(11,11,11,.88);--ink-mute:rgba(11,11,11,.8)}
   nav{background:var(--ink);backdrop-filter:none}
 }
 
@@ -515,6 +695,10 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
       <a href="#give">Support</a>
+      <!-- The page has one goal — get someone through the door on a
+           Sunday — and this is it. It carries the time, because the
+           time is the thing a first-time visitor actually needs. -->
+      <a class="cta" href="#sunday">Join us Sunday, 10am</a>
     </div>
   </nav>
 
@@ -526,18 +710,23 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     <div class="frame-caption">
       <p class="label">200 W. Grove St.</p>
       <p class="h3">In the heart of Midland. Doors open at half past nine.</p>
+      <a class="cta frame-cta" href="#sunday">Join us Sunday, 10am</a>
     </div>
   </section>
 
   <!-- Sunday / Service Info -->
   <section id="sunday" class="light">
     <div class="wrap">
-      <p class="label rise" style="color:var(--ink-40);margin-bottom:1.75rem">Service info</p>
-      <h2 class="h2 rise d1" style="max-width:16ch">We gather weekly at 10am to worship.</h2>
-      <p class="body lede rise d2">
-        Doors are open at 9:30am for coffee and connecting with others
-        before service.
-      </p>
+      <div class="grid">
+        <div class="sec-head span-head">
+          <p class="label rise">Service info</p>
+          <h2 class="h2 rise d1">We gather weekly at 10am to worship.</h2>
+          <p class="body lede rise d2">
+            Doors are open at 9:30am for coffee and connecting with others
+            before service.
+          </p>
+        </div>
+      </div>
 
       <div class="cols">
         <div class="col rise">
@@ -584,7 +773,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
        The names carry it on their own. -->
   <section id="about" class="dark">
     <div class="wrap">
-      <div class="trio">
+      <div class="cols trio">
         <div class="col rise">
           <h2 class="h3">Mission</h2>
           <p>
@@ -629,8 +818,12 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   <!-- Contact -->
   <section id="contact" class="light">
     <div class="wrap">
-      <p class="label rise" style="color:var(--ink-40);margin-bottom:1.75rem">Contact</p>
-      <h2 class="h2 rise d1" style="max-width:14ch">Come as you are.</h2>
+      <div class="grid">
+        <div class="sec-head span-head">
+          <p class="label rise">Contact</p>
+          <h2 class="h2 rise d1">Come as you are.</h2>
+        </div>
+      </div>
 
       <div class="cols">
         <div class="col rise">
@@ -652,8 +845,12 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   <!-- Support -->
   <section id="give" class="dark">
     <div class="wrap">
-      <p class="label rise" style="color:var(--paper-40);margin-bottom:1.75rem">Support GCM</p>
-      <h2 class="h2 rise d1" style="max-width:20ch">Your generosity supports our mission to share the good news of Christ and care for others in our neighborhood.</h2>
+      <div class="grid">
+        <div class="sec-head span-head">
+          <p class="label rise">Support GCM</p>
+          <h2 class="h2 rise d1">Your generosity supports our mission to share the good news of Christ and care for others in our neighborhood.</h2>
+        </div>
+      </div>
 
       <div class="cols">
         <div class="col rise">
@@ -682,7 +879,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
         <div>Grove Church Midland — 200 W. Grove St., Midland, MI 48640</div>
         <div>Sunday worship 10:00 am — doors open 9:30 am</div>
         <div>…and you will find rest for your souls. Matthew 11:29</div>
-        <div style="margin-top:.6rem">
+        <div class="foot-links">
           <a href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
           &nbsp;·&nbsp;
           <a href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>

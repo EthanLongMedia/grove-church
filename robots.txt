@@ -1,0 +1,5 @@
+# Staging copy of grovechurchmidland.com — kept out of search so the two
+# do not compete for the same content. Delete this file (and the
+# <meta name="robots"> tag in index.html) once the real domain points here.
+User-agent: *
+Disallow: /
