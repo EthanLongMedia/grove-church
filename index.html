@@ -471,22 +471,6 @@ section{position:relative}
    carry type, and without type it is just dimming the photograph. */
 .frame.plain::after{display:none}
 
-/* The gathering shot is a tall portrait frame from the balcony. A
-   full-bleed landscape crop takes a horizontal band out of it, and
-   centred that band lands on the backs of heads; biasing the crop
-   upward keeps the organ, the arch and the band in shot along with
-   the congregation. Shorter than a full viewport for the same
-   reason — less of the picture is thrown away. */
-.frame.tall{height:min(88svh,44rem)}
-.frame.tall img{object-position:center 34%}
-
-/* The worship shot is 4:3 landscape with the stained glass on the
-   left and the guitarist on the right — the picture only works if
-   both are in it. A full-height frame is far narrower than 4:3 on a
-   phone, and cover-cropping takes the window off the side. Letting
-   the frame carry the photograph's own ratio means the crop happens
-   top-and-bottom on wide screens and not at all on narrow ones. */
-.frame.wide{height:auto;min-height:0;aspect-ratio:4/3;max-height:78svh}
 /* Where the photograph carries its own strong subject at the
    bottom, the caption moves to the clean end of the frame. */
 .frame.cap-top .frame-caption{
@@ -531,6 +515,7 @@ section{position:relative}
 .col p{margin:var(--s-1) 0 0;line-height:1.62;color:var(--ink-body)}
 .dark .col p{color:var(--paper-body)}
 .col .btn{margin-top:var(--s-3)}
+.col .cta{margin:var(--s-2) 0 var(--s-3)}
 
 /* About: the same 4+4+4, but its three columns are peers with no
    eyebrow above them, so they get their own row rhythm. */
@@ -567,10 +552,46 @@ section{position:relative}
   }
 }
 
+/* ── Sunday: two photographs, then the map ────────────────────
+   The pictures run at their own aspect ratios here rather than
+   being cover-cropped — the gathering shot is the whole room and
+   the whole room is the point. Left column is that one picture;
+   right column is the text with the worship shot under it, spaced
+   apart so the two columns finish level. */
+.sunday-grid{align-items:stretch}
+.photo{margin:0}
+.photo img{width:100%;height:auto}
+.sunday-left,.sunday-right{grid-column:1/-1}
+.sunday-right{display:flex;flex-direction:column;gap:var(--s-5)}
+.sunday-right .h2{margin-bottom:var(--s-3)}
+@media (min-width:64rem){
+  .sunday-left {grid-column:span 6}
+  .sunday-right{grid-column:span 6;justify-content:space-between}
+}
+@media (max-width:64rem){
+  /* Stacked, the text belongs above both pictures rather than
+     wedged between them. */
+  .sunday-left{order:2}
+  .sunday-right{order:1}
+  .sunday-grid{row-gap:var(--s-5)}
+}
+
 /* ── Directions ──
-   A live map, square and centred, so people can actually route to
-   the door rather than squint at a picture of a map. */
-.mapblock{margin:clamp(var(--s-5),9vh,var(--s-7)) auto 0;max-width:min(52rem,92vw);text-align:center}
+   A live map, edge to edge and shallow — a band across the page
+   rather than a square block sitting inside the text column, so
+   people can actually route to the door. Sits outside .wrap,
+   which is what lets it reach both gutters. */
+/* The map is the section's own closing band, so the wrap above it
+   does not also pay its bottom padding — the two together left a
+   dead strip taller than the map. */
+#sunday .wrap{padding-bottom:0}
+.map-full{
+  position:relative;
+  height:clamp(15rem,36vh,24rem);
+  margin-top:clamp(var(--s-6),8vh,var(--s-7));
+  overflow:hidden;background:#e9e9e9;
+}
+.map-foot{padding:var(--s-5) var(--gutter) 0;text-align:center}
 .map-frame{
   position:relative;aspect-ratio:1;
   overflow:hidden;border-radius:8px;
@@ -581,11 +602,12 @@ section{position:relative}
    and hit-tests every pointer move, and it swallows the wheel — which
    is exactly what makes scrolling past it and mousing over it feel
    sticky. Gating pointer events hands scrolling back to the page. */
-.map-frame iframe{
+.map-frame iframe,.map-full iframe{
   position:absolute;inset:0;width:100%;height:100%;border:0;
   pointer-events:none;
 }
-.map-frame.live iframe{pointer-events:auto}
+.map-frame.live iframe,.map-full.live iframe{pointer-events:auto}
+.map-full.live .map-hint{opacity:0}
 
 .map-hint{
   position:absolute;left:50%;bottom:var(--s-2);transform:translateX(-50%);
@@ -597,7 +619,7 @@ section{position:relative}
   transition:opacity .3s var(--ease-out);
 }
 .map-frame.live .map-hint{opacity:0}
-.mapblock figcaption{
+.mapblock figcaption,.map-note{
   margin:clamp(var(--s-4),4vh,var(--s-5)) auto 0;
   max-width:var(--measure);
   font-size:var(--t-0);line-height:1.62;color:var(--ink-body);
@@ -667,6 +689,24 @@ footer{padding:clamp(var(--s-5),8vh,var(--s-7)) var(--gutter) var(--s-4);border-
 .foot-links{margin-top:var(--s-1)}
 .foot-meta a{color:var(--paper-body);text-decoration:none;border-bottom:1px solid var(--paper-hair)}
 .foot-meta a:hover{color:var(--paper)}
+
+/* The footer carries the contact details now, so they are set to be
+   read rather than tucked away — full paper, a real size, and the
+   giving action as the one solid fill on the page. */
+.foot-contact{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-3)}
+.foot-link{
+  font-size:var(--t-1);letter-spacing:-.014em;
+  color:var(--paper);text-decoration:none;
+  border-bottom:1px solid var(--paper-mute);padding-bottom:.08em;
+  transition:border-color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.foot-link:hover{border-bottom-color:var(--paper)}
+.foot-link:active{opacity:.55;transition-duration:0s}
+.foot-contact .cta{margin-top:var(--s-1)}
+@media (max-width:52rem){
+  .foot-row{align-items:flex-start}
+  .foot-link{font-size:var(--t-0)}
+}
 
 /* ── Credit ────────────────────────────────────────────────────
    Sits below a hairline, quieter than anything above it. A credit
@@ -763,93 +803,73 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       <img class="nav-mark" src="assets/logo-white.png" alt="">
       <span class="nav-name">Grove Church Midland</span>
     </a>
+    <!-- No Contact link: that section is gone, and its email and
+         Facebook now live in the footer. -->
     <div class="nav-links">
       <a href="#sunday">Service Info</a>
       <a href="#about">About</a>
-      <a href="#contact">Contact</a>
       <a href="#give">Support</a>
-      <!-- The page has one goal — get someone through the door on a
-           Sunday — and this is it. It carries the time, because the
-           time is the thing a first-time visitor actually needs. -->
-      <a class="cta" href="#sunday">Join us Sunday, 10am</a>
     </div>
   </nav>
 
-  <!-- The chapel frame is the hero now. The service details it used
-       to sit above are all still in Service Info below. -->
-  <!-- No caption on any photograph — the pictures carry themselves,
-       and the address and service times are in Service Info, Contact
-       and the footer. The CTA stays: it is an action, not a
-       description, and it is what has to be visible on landing. -->
-  <section id="top" class="frame cap-top plain" data-frame>
+  <!-- The chapel frame is the hero. Where the CTA used to sit, the
+       address and the service time now stand as plain type — the two
+       things a first-time visitor actually needs, and the only words
+       on any photograph on the page. -->
+  <section id="top" class="frame cap-top" data-frame>
     <h1 class="sr">Grove Church Midland</h1>
     <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/chapel-bw.jpg" alt="The chapel steeple and roof cross under snow against a clear sky"></div></div>
     <div class="frame-caption">
-      <a class="cta frame-cta" href="#sunday">Join us Sunday, 10am</a>
+      <p class="label">200 W. Grove &nbsp;·&nbsp; 10 am</p>
+      <p class="h3">In the heart of Midland. Doors open at half past nine.</p>
     </div>
   </section>
 
-  <!-- Sunday / Service Info -->
+  <!-- Sunday / Service Info — the two photographs side by side, the
+       text sitting in the space above the worship shot, and the map
+       running the full width beneath them. -->
   <section id="sunday" class="light">
     <div class="wrap">
-      <div class="grid">
-        <div class="sec-head span-head">
-          <p class="label rise">Service info</p>
-          <h2 class="h2 rise d1">We gather weekly at 10am to worship.</h2>
-          <p class="body lede rise d2">
-            Doors are open at 9:30am for coffee in the basement and
-            connecting with others before service.
-          </p>
+      <div class="grid sunday-grid">
+
+        <figure class="photo sunday-left rise">
+          <img src="assets/photos/gathering-bw.jpg" alt="The congregation standing together during Sunday worship, seen from the balcony, with the pipe organ and the band at the front of the sanctuary">
+        </figure>
+
+        <div class="sunday-right">
+          <div class="rise d1">
+            <h2 class="h2">Before and after</h2>
+            <p class="body">Sunday service is a significant part of being together, but not the end all to our gatherings. There are coffee shops and restaurants a block or two away, and Grove Park is a few steps from the door — play areas and a basketball court included.</p>
+          </div>
+          <figure class="photo rise d2">
+            <img src="assets/photos/worship-bw.jpg" alt="A worship leader singing and playing guitar beside the chapel's stained glass window">
+          </figure>
         </div>
+
       </div>
-
-      <!-- Two columns, not three: a "Sunday worship / 10:00 am, every
-           week" column used to sit first and said the same two facts
-           the heading above already says. The only detail it carried
-           that the heading did not — that the coffee is in the
-           basement — has moved up into the lede. -->
-      <div class="cols">
-        <div class="col rise">
-          <p class="label">Childcare</p>
-          <p class="h3">Not currently offered</p>
-          <p>Families are welcome to worship together on Sundays.</p>
-        </div>
-        <div class="col rise d1">
-          <p class="label">Community on Sundays</p>
-          <p class="h3">Before and after</p>
-          <p>Sunday service is a significant part of being together, but not the end all to our gatherings. There are coffee shops and restaurants a block or two away, and Grove Park is a few steps from the door — play areas and a basketball court included.</p>
-        </div>
-      </div>
-
-      <figure class="mapblock rise">
-        <!-- The iframe is not in the markup: it is built once the map
-             scrolls close, and stays inert until clicked. -->
-        <div class="map-frame" id="map"
-             data-src="https://maps.google.com/maps?q=200%20W%20Grove%20St%2C%20Midland%2C%20MI%2048640&amp;z=16&amp;output=embed">
-          <p class="map-hint">Click to interact</p>
-        </div>
-
-        <div class="directions">
-          <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Google Maps</a>
-          <a class="btn" href="https://maps.apple.com/?daddr=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Apple Maps</a>
-        </div>
-
-        <figcaption>
-          The front of the church on Gordon Street is for drop-off only.
-          Parking is in the back lot, or street parking on Fitzhugh and
-          Grove. Grove Park has plenty of space as well. Please try not to
-          park at businesses that are open on Sundays — thank you.
-        </figcaption>
-      </figure>
     </div>
-  </section>
 
-  <!-- The gathering itself, straight after the service details —
-       the room is the answer to "what is a Sunday here like".
-       No caption: the hero already carries one, and this
-       photograph does not need words on top of it. -->
-  <section class="frame plain tall" data-frame>
-    <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/gathering-bw.jpg" alt="The congregation standing together during Sunday worship, seen from the balcony, with the pipe organ and the band at the front of the sanctuary"></div></div>
+    <!-- Outside .wrap on purpose — that is what lets it reach both
+         gutters. The iframe is still built only once it scrolls
+         close, and stays inert until clicked so it never fights the
+         page's scroll. -->
+    <div class="map-full rise" id="map"
+         data-src="https://maps.google.com/maps?q=200%20W%20Grove%20St%2C%20Midland%2C%20MI%2048640&amp;z=16&amp;output=embed">
+      <p class="map-hint">Click to interact</p>
+    </div>
+
+    <div class="map-foot">
+      <div class="directions">
+        <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Google Maps</a>
+        <a class="btn" href="https://maps.apple.com/?daddr=200+W+Grove+St%2C+Midland%2C+MI+48640" target="_blank" rel="noopener">Directions in Apple Maps</a>
+      </div>
+      <p class="map-note">
+        The front of the church on Gordon Street is for drop-off only.
+        Parking is in the back lot, or street parking on Fitzhugh and
+        Grove. Grove Park has plenty of space as well. Please try not to
+        park at businesses that are open on Sundays — thank you.
+      </p>
+    </div>
   </section>
 
   <!-- About — three even columns, no section heading and no rules.
@@ -898,37 +918,8 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     </div>
   </section>
 
-  <!-- Worship, between the beliefs and the invitation to come. -->
-  <section class="frame plain wide" data-frame>
-    <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/worship-bw.jpg" alt="A worship leader singing and playing guitar beside the chapel's stained glass window"></div></div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="light">
-    <div class="wrap">
-      <div class="grid">
-        <div class="sec-head span-head">
-          <p class="label rise">Contact</p>
-          <h2 class="h2 rise d1">Come as you are.</h2>
-        </div>
-      </div>
-
-      <div class="cols">
-        <div class="col rise">
-          <p class="label">Where</p>
-          <address class="h3">200 W. Grove St.<br>Midland, MI 48640</address>
-        </div>
-        <div class="col rise d1">
-          <p class="label">Email</p>
-          <a class="big-link" href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
-        </div>
-        <div class="col rise d2">
-          <p class="label">Up to date info &amp; events</p>
-          <a class="big-link" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Contact section removed — its email and Facebook are in the
+       footer now, and both photographs moved up into Service Info. -->
 
   <!-- Support -->
   <section id="give" class="dark">
@@ -941,16 +932,13 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       </div>
 
       <div class="cols">
+        <!-- The button says the whole thing itself now. It used to sit
+             under an "Online" heading that the label already implied,
+             with the action stranded below the description. -->
         <div class="col rise">
           <p class="label">General giving</p>
-          <p class="h3">Online</p>
-          <p>Through Givebutter, with a PayPal option available. Note that the “tip” option can be removed.</p>
-          <!-- The live site's actual Givebutter campaign, taken from
-               grovechurchmidland.com/support-gcm. Secondary tier on
-               purpose: the solid fill stays reserved for the one page
-               goal, so giving reads as available without competing
-               with it. -->
-          <a class="btn" href="https://givebutter.com/kvbb57" target="_blank" rel="noopener">Give through Givebutter</a>
+          <a class="cta" href="https://givebutter.com/kvbb57" target="_blank" rel="noopener">Give online through Givebutter</a>
+          <p>A PayPal option is available, and the “tip” option can be removed.</p>
         </div>
         <div class="col rise d1">
           <p class="label">In person</p>
@@ -969,15 +957,13 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   <footer class="dark">
     <div class="foot-row">
       <img class="foot-mark" src="assets/logo-white.png" alt="Grove Church Midland">
-      <div class="foot-meta">
-        <div>Grove Church Midland — 200 W. Grove St., Midland, MI 48640</div>
-        <div>Sunday worship 10:00 am — doors open 9:30 am</div>
-        <div>…and you will find rest for your souls. Matthew 11:29</div>
-        <div class="foot-links">
-          <a href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
-          &nbsp;·&nbsp;
-          <a href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
-        </div>
+      <!-- The address, service times and verse that used to fill this
+           side are gone. What is left is the three things someone
+           actually acts on, at a size they can be read at. -->
+      <div class="foot-contact">
+        <a class="foot-link" href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
+        <a class="foot-link" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
+        <a class="cta" href="https://givebutter.com/kvbb57" target="_blank" rel="noopener">Give online through Givebutter</a>
       </div>
     </div>
 
