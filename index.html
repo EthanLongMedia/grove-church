@@ -9,17 +9,23 @@
 <link rel="icon" href="assets/logo-src.jpg">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-<!-- Type pairing (Fontshare). Two families, two jobs:
+<!-- Type pairing (Fontshare), self-hosted. Two families, two jobs:
      Sentient — a warm literary serif, set at 400. Carries every
        heading and the intro beats. The voice of the page.
      Switzer  — a Swiss grotesk. Body, labels, nav, buttons. The
        delivery vehicle; it is not supposed to be noticed.
-     Two links, not one combined f[] query — the combined form
-     silently returns only the first family. -->
-<link rel="preconnect" href="https://api.fontshare.com">
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=sentient@400,500&display=swap">
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=switzer@400,500,600&display=swap">
+
+     Served from assets/, not api.fontshare.com. A third-party
+     <link rel="stylesheet"> is render-blocking, so a slow font
+     host would hold up first paint — and the first paint here is
+     the intro, which is already a near-black screen. Two DNS
+     lookups, two TLS handshakes and two round trips are gone, and
+     the page no longer breaks if Fontshare moves a URL.
+
+     Only the four faces actually used are shipped: Sentient 400,
+     Switzer 400/500/600. Adding a weight means adding a file. -->
+<link rel="preload" href="assets/fonts/Sentient-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Switzer-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Social preview -->
 <meta property="og:type" content="website">
@@ -45,6 +51,16 @@ document.documentElement.className="js";
 try{ history.scrollRestoration="manual"; }catch(e){}
 </script>
 <style>
+/* ── Faces ──────────────────────────────────────────────────
+   swap, not block: if a face is somehow slow the fallback shows
+   and is replaced, rather than the text being invisible while
+   it waits. The fallback stacks in --serif / --sans below are
+   chosen to be close in width so that swap is not a lurch. */
+@font-face{font-family:"Sentient";src:url(assets/fonts/Sentient-Regular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Regular.woff2)  format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Medium.woff2)   format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Semibold.woff2) format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
 /* ============================================================
    GROVE CHURCH MIDLAND — DESIGN SYSTEM
 
@@ -509,16 +525,21 @@ section{position:relative}
    grows; display type set at body values falls apart. Stacked on
    mobile there is no empty column to fill, so this does not apply. */
 @media (min-width:64rem){
-  /* Three consecutive steps of the scale, largest first. Size is
-     carrying importance here as well as fit: Mission is the one
-     sentence the other two elaborate on, so it is the one set
-     large — and at that size it takes the serif. */
+  /* A three-step stair, largest first. Size carries importance as
+     well as fit: Mission is the one sentence the other two
+     elaborate on, Vision expands it, Beliefs is the long
+     doctrinal detail. Mission and Vision are short enough to take
+     the serif at display size; Beliefs is two full paragraphs and
+     stays in the workhorse face at reading size, which is what
+     keeps the step between the second and third columns wide
+     enough to read as deliberate. */
   .trio .col:nth-child(1) p{
     font-family:var(--serif);
-    font-size:var(--t-2);line-height:1.28;letter-spacing:-.016em;
+    font-size:var(--t-3);line-height:1.14;letter-spacing:-.02em;
   }
   .trio .col:nth-child(2) p{
-    font-size:var(--t-1);line-height:1.4;letter-spacing:-.012em;
+    font-family:var(--serif);
+    font-size:var(--t-3);line-height:1.14;letter-spacing:-.02em;
   }
   .trio .col:nth-child(3) p{
     font-size:var(--t-0);line-height:1.62;letter-spacing:-.003em;
