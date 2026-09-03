@@ -467,6 +467,26 @@ section{position:relative}
   content:"";position:absolute;inset:auto 0 0 0;height:48%;
   background:linear-gradient(transparent,rgba(0,0,0,.62));pointer-events:none;
 }
+/* A frame with no caption needs no scrim — the gradient exists to
+   carry type, and without type it is just dimming the photograph. */
+.frame.plain::after{display:none}
+
+/* The gathering shot is a tall portrait frame from the balcony. A
+   full-bleed landscape crop takes a horizontal band out of it, and
+   centred that band lands on the backs of heads; biasing the crop
+   upward keeps the organ, the arch and the band in shot along with
+   the congregation. Shorter than a full viewport for the same
+   reason — less of the picture is thrown away. */
+.frame.tall{height:min(88svh,44rem)}
+.frame.tall img{object-position:center 34%}
+
+/* The worship shot is 4:3 landscape with the stained glass on the
+   left and the guitarist on the right — the picture only works if
+   both are in it. A full-height frame is far narrower than 4:3 on a
+   phone, and cover-cropping takes the window off the side. Letting
+   the frame carry the photograph's own ratio means the crop happens
+   top-and-bottom on wide screens and not at all on narrow ones. */
+.frame.wide{height:auto;min-height:0;aspect-ratio:4/3;max-height:78svh}
 /* Where the photograph carries its own strong subject at the
    bottom, the caption moves to the clean end of the frame. */
 .frame.cap-top .frame-caption{
@@ -510,6 +530,7 @@ section{position:relative}
 .dark .col .label{color:var(--paper-mute)}
 .col p{margin:var(--s-1) 0 0;line-height:1.62;color:var(--ink-body)}
 .dark .col p{color:var(--paper-body)}
+.col .btn{margin-top:var(--s-3)}
 
 /* About: the same 4+4+4, but its three columns are peers with no
    eyebrow above them, so they get their own row rhythm. */
@@ -647,6 +668,37 @@ footer{padding:clamp(var(--s-5),8vh,var(--s-7)) var(--gutter) var(--s-4);border-
 .foot-meta a{color:var(--paper-body);text-decoration:none;border-bottom:1px solid var(--paper-hair)}
 .foot-meta a:hover{color:var(--paper)}
 
+/* ── Credit ────────────────────────────────────────────────────
+   Sits below a hairline, quieter than anything above it. A credit
+   that competes with the church's own footer is a credit that
+   gets removed. */
+.foot-credit{
+  margin-top:var(--s-5);padding-top:var(--s-3);
+  border-top:1px solid var(--paper-hair);
+}
+.credit{
+  display:inline-flex;align-items:center;gap:var(--s-05);
+  color:var(--paper-mute);text-decoration:none;
+  font-size:var(--t-label);letter-spacing:.02em;
+  transition:color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.credit:hover{color:var(--paper)}
+.credit:active{opacity:.6;transition-duration:0s}
+.credit strong{font-weight:500}
+
+/* The mark: an E and an L standing on one continuous baseline that
+   runs past both of them. The baseline is the idea — it is the
+   underline under a link, which is what the mark always is. Drawn
+   as filled geometry rather than strokes so it stays crisp at
+   20px, and in currentColor so it inherits whatever it sits on. */
+.el-mark{width:1.25rem;height:1.25rem;flex:none;fill:currentColor}
+.el-base{
+  transform-box:fill-box;transform-origin:left center;
+  transform:scaleX(.78);
+  transition:transform .45s var(--ease-out);
+}
+.credit:hover .el-base,.credit:focus-visible .el-base{transform:scaleX(1)}
+
 /* ── Reveal primitive ── */
 .rise{opacity:0;transform:translateY(1.75rem)}
 .rise.seen{opacity:1;transform:none;transition:opacity .75s var(--ease-out),transform .85s var(--ease-out)}
@@ -725,12 +777,14 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
 
   <!-- The chapel frame is the hero now. The service details it used
        to sit above are all still in Service Info below. -->
-  <section id="top" class="frame cap-top" data-frame>
+  <!-- No caption on any photograph — the pictures carry themselves,
+       and the address and service times are in Service Info, Contact
+       and the footer. The CTA stays: it is an action, not a
+       description, and it is what has to be visible on landing. -->
+  <section id="top" class="frame cap-top plain" data-frame>
     <h1 class="sr">Grove Church Midland</h1>
     <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/chapel-bw.jpg" alt="The chapel steeple and roof cross under snow against a clear sky"></div></div>
     <div class="frame-caption">
-      <p class="label">200 W. Grove St.</p>
-      <p class="h3">In the heart of Midland. Doors open at half past nine.</p>
       <a class="cta frame-cta" href="#sunday">Join us Sunday, 10am</a>
     </div>
   </section>
@@ -790,6 +844,14 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     </div>
   </section>
 
+  <!-- The gathering itself, straight after the service details —
+       the room is the answer to "what is a Sunday here like".
+       No caption: the hero already carries one, and this
+       photograph does not need words on top of it. -->
+  <section class="frame plain tall" data-frame>
+    <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/gathering-bw.jpg" alt="The congregation standing together during Sunday worship, seen from the balcony, with the pipe organ and the band at the front of the sanctuary"></div></div>
+  </section>
+
   <!-- About — three even columns, no section heading and no rules.
        The names carry it on their own. -->
   <section id="about" class="dark">
@@ -836,6 +898,11 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
     </div>
   </section>
 
+  <!-- Worship, between the beliefs and the invitation to come. -->
+  <section class="frame plain wide" data-frame>
+    <div class="frame-clip"><div class="frame-inner"><img src="assets/photos/worship-bw.jpg" alt="A worship leader singing and playing guitar beside the chapel's stained glass window"></div></div>
+  </section>
+
   <!-- Contact -->
   <section id="contact" class="light">
     <div class="wrap">
@@ -878,6 +945,12 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
           <p class="label">General giving</p>
           <p class="h3">Online</p>
           <p>Through Givebutter, with a PayPal option available. Note that the “tip” option can be removed.</p>
+          <!-- The live site's actual Givebutter campaign, taken from
+               grovechurchmidland.com/support-gcm. Secondary tier on
+               purpose: the solid fill stays reserved for the one page
+               goal, so giving reads as available without competing
+               with it. -->
+          <a class="btn" href="https://givebutter.com/kvbb57" target="_blank" rel="noopener">Give through Givebutter</a>
         </div>
         <div class="col rise d1">
           <p class="label">In person</p>
@@ -907,6 +980,25 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
         </div>
       </div>
     </div>
+
+    <!-- CREDIT — off until there is a domain to point at.
+         To switch on: delete this comment wrapper and put the real
+         URL in the href. Nothing else needs changing; the .foot-credit,
+         .credit and .el-mark rules are already in the stylesheet.
+
+    <div class="foot-credit">
+      <a class="credit" href="https://REPLACE-WITH-REAL-DOMAIN" target="_blank" rel="noopener">
+        <svg class="el-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect x="5" y="5" width="3" height="22"/>
+          <rect x="5" y="5" width="12" height="3"/>
+          <rect x="5" y="14.5" width="9" height="3"/>
+          <rect x="20" y="5" width="3" height="22"/>
+          <rect class="el-base" x="5" y="24" width="25" height="3"/>
+        </svg>
+        <span>Site by <strong>Ethan Long Web Design</strong></span>
+      </a>
+    </div>
+    -->
   </footer>
 
 </div>
