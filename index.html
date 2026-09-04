@@ -807,7 +807,13 @@ footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
   /* The cue still says "scroll"; it just stops moving. */
   .cue-track::after{animation:none;opacity:1;height:100%;background:var(--ink-body)}
 }
-@media (max-width:36rem){ .scroll-cue{display:none} }
+/* Shown on phones too. The gutter is tighter there, so the cue is
+   pulled in a little and its track shortened — it still has to sit
+   clear of the edge without crowding it. */
+@media (max-width:36rem){
+  .scroll-cue{right:calc(var(--gutter) - .25rem);bottom:var(--s-4);gap:var(--s-1)}
+  .cue-track{height:2.5rem}
+}
 
 /* ── Reveal primitive ── */
 .rise{opacity:0;transform:translateY(1.75rem)}
