@@ -363,22 +363,11 @@ nav a::after{
 nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
 nav a:active{opacity:.55;transition-duration:0s} /* feedback on press-down */
 
-/* Below 832px the section links wrap to two lines and shove the CTA
-   off the right edge, so the bar drops them and keeps the brand and
-   the one action. A five-section page is navigated by scrolling, and
-   a bar carrying a single goal is the better conversion surface
-   anyway — the links all still exist in the footer. */
-@media (max-width:52rem){
-  .nav-links a:not(.cta){display:none}
-  /* With the links gone the bar's CTA is large and sits directly
-     above the frame's, two identical buttons a finger apart. One
-     goal, one button: the frame yields to the bar. Above this
-     width they are far apart and at different scales, which reads
-     as a pair rather than a duplicate. */
-  .frame-cta{display:none}
-}
 @media (max-width:36rem){
+  /* The wordmark goes and the links close up, so all three fit
+     beside the mark without wrapping. */
   .nav-name{display:none}
+  .nav-links{gap:var(--s-3)}
   .cta,.btn{padding:var(--s-1) var(--s-2)}
 }
 
@@ -467,9 +456,6 @@ section{position:relative}
 }
 .frame-caption .label{color:rgba(255,255,255,.72);margin-bottom:var(--s-2)}
 .frame-caption .h3{max-width:24ch}
-/* The CTA is in the first screenful, over the photograph, because
-   that is the only place a visitor is guaranteed to look. */
-.frame-cta{margin-top:var(--s-3);text-shadow:none}
 
 /* Scrim only where type sits over the image, not a blanket dim. */
 .frame::after{
