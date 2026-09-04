@@ -1,5 +1,8 @@
-# Staging copy of grovechurchmidland.com — kept out of search so the two
-# do not compete for the same content. Delete this file (and the
-# <meta name="robots"> tag in index.html) once the real domain points here.
+# The staging URL is kept out of search by an X-Robots-Tag header that
+# Vercel sends only on the *.vercel.app host (see vercel.json), not by
+# a rule here. Crawling has to be allowed for that header to be seen —
+# a Disallow would hide the noindex rather than enforce it.
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://grovechurchmidland.com/sitemap.xml

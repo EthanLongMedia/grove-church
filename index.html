@@ -47,11 +47,12 @@
 <meta name="twitter:image" content="https://grove-church.vercel.app/assets/og.jpg?v=2">
 <meta name="theme-color" content="#0B0B0B">
 
-<!-- Staging only. This is a near-copy of grovechurchmidland.com, and two
-     indexed copies would compete with each other, so search engines are
-     kept off this URL. REMOVE this tag (and robots.txt) the moment the
-     real domain points here — otherwise the live site stays invisible. -->
-<meta name="robots" content="noindex, nofollow">
+<!-- Indexing is decided per host, not here. A meta tag ships with the
+     file and so cannot tell grovechurchmidland.com apart from the
+     staging URL; vercel.json sends X-Robots-Tag: noindex only on the
+     *.vercel.app host instead. That means the real domain is indexable
+     the moment DNS cuts over, with nothing left to remember. -->
+<link rel="canonical" href="https://grovechurchmidland.com/">
 <script>
 document.documentElement.className="js";
 /* The intro plays on every load, so the page must always come up at
