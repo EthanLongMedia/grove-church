@@ -32,11 +32,20 @@
 <meta property="og:site_name" content="Grove Church Midland">
 <meta property="og:title" content="Grove Church Midland">
 <meta property="og:description" content="A place where Christ is most important and people are deeply loved. Sunday worship at 10am — 200 W. Grove St., Midland, Michigan.">
-<meta property="og:image" content="https://ethanlongmedia.github.io/grove-church/assets/og.jpg">
+<!-- Absolute URLs, pointing at the live Vercel site — a link preview
+     is fetched by Apple's/Meta's servers, not the browser, so a
+     relative path or a stale host gives them nothing to show. The ?v
+     is a cache-buster: iMessage and Facebook cache a preview per URL
+     and will keep serving the old card otherwise. -->
+<meta property="og:image" content="https://grove-church.vercel.app/assets/og.jpg?v=2">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://ethanlongmedia.github.io/grove-church/">
+<meta property="og:image:alt" content="The Grove Church Midland mark — a tree in a circle — in white on black">
+<meta property="og:url" content="https://grove-church.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://grove-church.vercel.app/assets/og.jpg?v=2">
+<meta name="theme-color" content="#0B0B0B">
 
 <!-- Staging only. This is a near-copy of grovechurchmidland.com, and two
      indexed copies would compete with each other, so search engines are
