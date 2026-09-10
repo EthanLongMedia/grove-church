@@ -1011,7 +1011,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
               <textarea name="message" rows="4" required></textarea>
             </label>
             <button class="cta" type="submit">Send message</button>
-            <p class="cform-note" id="cform-note">Opens in your mail app, addressed to info@grovechurchmidland.com.</p>
+            <p class="cform-note" id="cform-note">Opens in your mail app, addressed to grovechapel200@gmail.com.</p>
           </form>
         </div>
 
@@ -1025,7 +1025,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       <!-- Siblings of the mark, not a group beside it, so the three
            items distribute across the whole bar. The giving button
            lives in Support now — one of it on the page, not two. -->
-      <a class="foot-link" href="mailto:info@grovechurchmidland.com">info@grovechurchmidland.com</a>
+      <a class="foot-link" href="mailto:grovechapel200@gmail.com">grovechapel200@gmail.com</a>
       <a class="foot-link" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
     </div>
 
@@ -1300,10 +1300,10 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       var f = new FormData(cform);
       var name = (f.get("name") || "").trim();
       var body = f.get("message") + "\n\n— " + name + " (" + f.get("email") + ")";
-      location.href = "mailto:info@grovechurchmidland.com"
+      location.href = "mailto:grovechapel200@gmail.com"
         + "?subject=" + encodeURIComponent("Message from " + name + " via the website")
         + "&body="    + encodeURIComponent(body);
-      note.textContent = "Opening your mail app\u2026 if nothing happens, email info@grovechurchmidland.com directly.";
+      note.textContent = "Opening your mail app\u2026 if nothing happens, email grovechapel200@gmail.com directly.";
     });
   }
 
