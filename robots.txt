@@ -5,4 +5,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://grovechurchmidland.com/sitemap.xml
+Sitemap: https://grovechurchmidland.org/sitemap.xml
