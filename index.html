@@ -779,6 +779,10 @@ footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
 }
 .cform .cta{align-self:flex-start;margin-top:var(--s-2);border:0;cursor:pointer;font:500 var(--t-ui)/1 var(--sans)}
 .cform-note{margin:0;color:var(--paper-mute);font-size:var(--t-label);line-height:1.5}
+.hp{position:absolute;left:-200vw;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.cform.sending .cta{opacity:.55;pointer-events:none}
+.cform-done{margin:0;font-size:var(--t-1);line-height:1.5;max-width:34rem}
+.cform-done small{display:block;margin-top:var(--s-1);color:var(--paper-mute);font-size:var(--t-label)}
 /* Marked only after a submit attempt, never while someone is still
    typing — that is what makes inline validation feel like nagging. */
 .field.bad input,.field.bad textarea{border-bottom-color:#ff8a8a}
@@ -1043,8 +1047,16 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
               <span>Message</span>
               <textarea name="message" rows="4" required></textarea>
             </label>
+            <!-- Honeypot. Off-screen, out of the tab order, ignored by
+                 screen readers; people never see it, bots fill it, and
+                 /api/contact quietly drops anything that arrives with
+                 it filled. Not display:none — some bots skip those. -->
+            <label class="hp" aria-hidden="true">
+              <span>Website</span>
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
             <button class="cta" type="submit">Send message</button>
-            <p class="cform-note" id="cform-note">Opens in your mail app, addressed to grovechapel200@gmail.com.</p>
+            <p class="cform-note" id="cform-note" aria-live="polite">Goes straight to the church. We reply to the email you enter.</p>
           </form>
         </div>
 
@@ -1334,20 +1346,65 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
 
     cform.addEventListener("submit", function(e){
       e.preventDefault();
-      var fields = cform.querySelectorAll("input, textarea");
+      var fields = cform.querySelectorAll(".field input, .field textarea");
       var ok = true;
       for (var i = 0; i < fields.length; i++){ if (!checkField(fields[i])) ok = false; }
       if (!ok){
-        note.textContent = "Add your name, a valid email and a message, and we will open your mail app.";
+        note.textContent = "Add your name, a valid email and a message.";
         return;
       }
       var f = new FormData(cform);
-      var name = (f.get("name") || "").trim();
-      var body = f.get("message") + "\n\n— " + name + " (" + f.get("email") + ")";
-      location.href = "mailto:grovechapel200@gmail.com"
-        + "?subject=" + encodeURIComponent("Message from " + name + " via the website")
-        + "&body="    + encodeURIComponent(body);
-      note.textContent = "Opening your mail app\u2026 if nothing happens, email grovechapel200@gmail.com directly.";
+      var name    = (f.get("name") || "").trim();
+      var email   = (f.get("email") || "").trim();
+      var message = (f.get("message") || "").trim();
+      var button  = cform.querySelector(".cta");
+
+      /* The old path, kept as the fallback: if the function is down
+         or not yet configured, the visitor's mail app still gets the
+         message rather than it vanishing. */
+      function mailApp(){
+        var body = message + "\n\n— " + name + " (" + email + ")";
+        location.href = "mailto:grovechapel200@gmail.com"
+          + "?subject=" + encodeURIComponent("Message from " + name + " via the website")
+          + "&body="    + encodeURIComponent(body);
+        note.textContent = "Couldn\u2019t send just now, so we opened your mail app instead. If nothing happened, email grovechapel200@gmail.com directly.";
+      }
+
+      cform.classList.add("sending");
+      button.disabled = true;
+      var label = button.textContent;
+      button.textContent = "Sending\u2026";
+      note.textContent = "";
+
+      fetch("/api/contact", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name: name, email: email, message: message, website: f.get("website") || ""})
+      }).then(function(r){
+        return r.json().then(function(j){ return {status: r.status, ok: r.ok && j && j.ok, error: j && j.error}; });
+      }).then(function(r){
+        if (r.ok){
+          var done = document.createElement("p");
+          done.className = "cform-done";
+          done.setAttribute("role", "status");
+          done.textContent = "Thank you, " + name + " \u2014 your message is on its way.";
+          var small = document.createElement("small");
+          small.textContent = "We\u2019ll reply to " + email + ".";
+          done.appendChild(small);
+          cform.replaceWith(done);
+          return;
+        }
+        cform.classList.remove("sending");
+        button.disabled = false;
+        button.textContent = label;
+        if (r.status === 400){ note.textContent = r.error || "Add your name, a valid email and a message."; return; }
+        mailApp();
+      }).catch(function(){
+        cform.classList.remove("sending");
+        button.disabled = false;
+        button.textContent = label;
+        mailApp();
+      });
     });
   }
 
