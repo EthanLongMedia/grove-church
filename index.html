@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Grove Church Midland</title>
 <meta name="description" content="A place where Christ is most important and people are deeply loved. Sunday worship at 10am — 200 W. Grove St., Midland, Michigan.">
 
@@ -156,7 +156,7 @@ try{ history.scrollRestoration="manual"; }catch(e){}
 *,*::before,*::after{box-sizing:border-box}
 /* No scroll-behavior:smooth — Lenis drives scrolling and the two
    fight each other. Anchor jumps go through lenis.scrollTo instead. */
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
 
 body{
   margin:0;
@@ -166,7 +166,7 @@ body{
   color:var(--paper);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
-  overflow-x:hidden;
+  overflow-x:clip;
 }
 img{display:block;max-width:100%}
 ::selection{background:var(--paper);color:var(--ink)}
@@ -712,18 +712,17 @@ footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
    they become a two-row grid instead: email and Facebook across the
    top, the mark and the credit beneath. The mark drops to 2rem so a
    320px screen still fits the logo beside it. */
+.foot-line{display:contents}
+.foot-mark{order:0}.foot-mail{order:1}.foot-fb{order:2}.credit{order:3}
+
+/* Under 52rem the four items would wrap unevenly as one row, so each
+   line becomes a row of its own: email and Facebook across the top,
+   the mark and the credit beneath. Rows size independently, so the
+   email can never widen the credit's row or the page. The mark drops
+   to 2rem so a 320px screen still fits the logo beside it. */
 @media (max-width:52rem){
-  .foot-row{
-    display:grid;grid-template-columns:1fr auto;align-items:center;
-    grid-template-areas:"mail fb" "mark credit";
-    column-gap:var(--s-3);row-gap:var(--s-4);
-  }
-  /* Anchors blockify as grid items and would stretch their underline
-     across the column; pin each to its edge instead. */
-  .foot-mail{grid-area:mail;justify-self:start}
-  .foot-fb{grid-area:fb;justify-self:end}
-  .foot-mark{grid-area:mark}
-  .credit{grid-area:credit;justify-self:end}
+  .foot-row{display:flex;flex-direction:column;align-items:stretch;gap:var(--s-4)}
+  .foot-line{display:flex;justify-content:space-between;align-items:center;gap:var(--s-3);flex-wrap:wrap;min-width:0}
   .elw{height:2rem}
 }
 
@@ -1042,14 +1041,20 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   </section>
 
   <footer class="dark">
-    <!-- Siblings, not groups, so on desktop the four items distribute
-         across the whole bar. Below 52rem the same four become a grid:
-         email and Facebook on top, the mark and the credit beneath. The
-         giving button lives in Support now — one of it on the page. -->
+    <!-- Two lines. On desktop they are display:contents, so the four
+         items distribute across one bar (mark, email, Facebook, credit
+         via `order`). Below 52rem each line is its own row: email and
+         Facebook on top, the mark and the credit beneath. The rows are
+         independent on purpose — a shared grid column let the email's
+         width push the page 48px past a 375px screen. The giving
+         button lives in Support now — one of it on the page. -->
     <div class="foot-row">
+      <div class="foot-line">
+        <a class="foot-link foot-mail" href="mailto:grovechapel200@gmail.com">grovechapel200@gmail.com</a>
+        <a class="foot-link foot-fb" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div class="foot-line">
       <img class="foot-mark" src="assets/logo-white.png" alt="Grove Church Midland">
-      <a class="foot-link foot-mail" href="mailto:grovechapel200@gmail.com">grovechapel200@gmail.com</a>
-      <a class="foot-link foot-fb" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
       <a class="credit" href="https://ethanlongdesign.com" target="_blank" rel="noopener" aria-label="Site by Ethan Long Design">
         <span>Site by</span>
         <svg class="elw" viewBox="0 0 624.76 140.52" aria-hidden="true" focusable="false">
@@ -1072,6 +1077,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
           <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.665" d="M238.15 0.00V-33.47H244.93L256.50 -15.03Q257.22 -13.88 258.03 -12.43Q258.84 -10.98 259.71 -9.20Q260.59 -7.41 261.44 -5.23H260.77Q260.61 -7.12 260.49 -9.11Q260.36 -11.10 260.31 -12.88Q260.25 -14.67 260.25 -15.90V-33.47H266.34V0.00H259.53L249.09 -16.60Q248.10 -18.19 247.22 -19.74Q246.35 -21.29 245.34 -23.25Q244.33 -25.20 242.89 -27.96H243.74Q243.88 -25.52 243.99 -23.33Q244.10 -21.14 244.18 -19.41Q244.26 -17.68 244.26 -16.62V0.00Z"/></g>
         </svg>
       </a>
+      </div>
     </div>
   </footer>
 
