@@ -681,7 +681,10 @@ footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
    white across the mark from left to right; the rule under the name
    is a second, white rect growing from the left in step with it.
    Leaving is a plain uniform fade, like every exit on this page.
-   "Site by" sits centred over the mark. */
+   "Site by" sits centred over the mark. The link deliberately has no
+   target="_blank": Facebook's in-app browser has no tabs, so a "new
+   tab" just replaces this page and its X then drops the visitor back
+   in Facebook. In place, the back arrow returns here. */
 .credit{
   display:inline-flex;flex-direction:column;align-items:center;gap:var(--s-1);
   color:var(--paper-mute);text-decoration:none;
@@ -1064,7 +1067,7 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
       </div>
       <div class="foot-line">
       <img class="foot-mark" src="assets/logo-white.png" alt="Grove Church Midland">
-      <a class="credit" href="https://ethanlongdesign.com" target="_blank" rel="noopener" aria-label="Site by Ethan Long Design">
+      <a class="credit" href="https://ethanlongdesign.com" aria-label="Site by Ethan Long Design">
         <span>Site by</span>
         <svg class="elw" viewBox="0 0 624.76 140.52" aria-hidden="true" focusable="false">
           <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.000" d="M5.66 0.00V-72.75H56.15V-58.69H22.90V-43.65H53.52V-29.88H22.90V-14.06H56.10V0.00Z"/></g>
