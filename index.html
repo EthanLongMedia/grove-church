@@ -512,7 +512,12 @@ section{position:relative}
 .dark .col p{color:var(--paper-body)}
 .col .btn{margin-top:var(--s-3)}
 .col .cta{margin:var(--s-2) 0 var(--s-3)}
-#serve .sec-head{margin-bottom:0}
+/* Serving: the section head already carries the 64px step to the
+   teams, so the columns don't add their own 96px on top of it. */
+#serve .cols{margin-top:0}
+.col h3{margin-bottom:var(--s-1)}
+.col p a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-hair);overflow-wrap:anywhere}
+.col p a:hover{border-bottom-color:var(--ink)}
 
 /* ── Mission / Vision / Beliefs ────────────────────────────────
    Mission over Vision on the left, Beliefs on the right, a rule
@@ -1012,15 +1017,30 @@ html:not(.js) .frame-caption{opacity:1;transform:none}
   </section>
 
   <!-- Serving Opportunities: straight under the map, still on white
-       so the map reads as a band between two light sections. A
-       placeholder until the church has its list of roles. -->
+       so the map reads as a band between two light sections. The
+       one place every team lives; a new team is another .col here,
+       not a page of its own. -->
   <section id="serve" class="light">
     <div class="wrap">
       <div class="grid">
         <div class="sec-head span-head rise">
           <p class="label">Get involved</p>
           <h2 class="h2">Serving Opportunities</h2>
-          <p class="body lede">Coming soon.</p>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="col rise">
+          <h3 class="h3">Tech Team</h3>
+          <p>If you are interested in helping with Sunday morning tech, whether that be setting up the online stream or running the projection, please email <a href="mailto:grovechapel200@gmail.com?subject=Tech%20Team">grovechapel200@gmail.com</a> and we will get you connected to the right person :)</p>
+        </div>
+        <div class="col rise d1">
+          <h3 class="h3">Care Team</h3>
+          <p>If you have a desire to provide care for our faith family, whether that be through a phone call or visiting with someone, please email <a href="mailto:grovechapel200@gmail.com?subject=Care%20Team">grovechapel200@gmail.com</a>.</p>
+        </div>
+        <div class="col rise d2">
+          <h3 class="h3">Cleaning Team</h3>
+          <p>If you would like to connect with others while cleaning the chapel, please email <a href="mailto:grovechapel200@gmail.com?subject=Cleaning%20Team">grovechapel200@gmail.com</a>.</p>
         </div>
       </div>
     </div>
