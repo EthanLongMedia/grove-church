@@ -6,12 +6,12 @@
 // to the visitor, so replying from Gmail goes straight back to them.
 //
 // Needs RESEND_API_KEY in the project's environment. Optional:
-// CONTACT_TO (default grovechapel200@gmail.com) and CONTACT_FROM.
+// CONTACT_TO (default grovechurchmidland@gmail.com) and CONTACT_FROM.
 //
 // The core is a pure function so it can be tested without the network:
 // handle(payload, {send, env}) -> {status, body}.
 
-const DEFAULT_TO   = "grovechapel200@gmail.com";
+const DEFAULT_TO   = "grovechurchmidland@gmail.com";
 const DEFAULT_FROM = "Grove Church Midland <noreply@grovechurchmidland.org>";
 const LIMITS = { name: 120, email: 254, message: 4000 };
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
