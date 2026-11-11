@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prayer Requests — Grove Church Midland</title>
+<meta name="description" content="Send a prayer request to Grove Church Midland. You don't need to leave your name — requests go privately to the church.">
+
+<link rel="icon" href="assets/logo-src.jpg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/Sentient-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Switzer-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grove Church Midland">
+<meta property="og:title" content="Prayer Requests — Grove Church Midland">
+<meta property="og:description" content="Send a prayer request to Grove Church Midland. You don't need to leave your name.">
+<meta property="og:image" content="https://grovechurchmidland.org/assets/og.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://grovechurchmidland.org/prayer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://grovechurchmidland.org/assets/og.jpg?v=2">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="canonical" href="https://grovechurchmidland.org/prayer">
+<!-- Shared design system: copied from index.html's <style> so the
+     two pages are set from the same tokens. If one changes, change
+     the other. Page-specific rules follow it. -->
+<style>
+/* ── Faces ──────────────────────────────────────────────────
+   swap, not block: if a face is somehow slow the fallback shows
+   and is replaced, rather than the text being invisible while
+   it waits. The fallback stacks in --serif / --sans below are
+   chosen to be close in width so that swap is not a lurch. */
+@font-face{font-family:"Sentient";src:url(assets/fonts/Sentient-Regular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Regular.woff2)  format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Medium.woff2)   format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Switzer";src:url(assets/fonts/Switzer-Semibold.woff2) format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
+/* ============================================================
+   GROVE CHURCH MIDLAND — DESIGN SYSTEM
+
+   Every value on this page comes from one of the four scales
+   below. Nothing is eyeballed. If a size, colour or space is
+   needed that is not here, the scale is wrong — not the token.
+   ============================================================ */
+
+:root{
+
+  /* ── COLOUR ── two colours, 60 / 30 / 10 ────────────────────
+     60  GROUND     ink or paper, whichever the section is
+     30  TYPE       the opposite colour, stepped down by opacity
+     10  ACCENT     the inverted solid — the CTA, and nothing else
+
+     There is no third hue. Depth comes from opacity, so the
+     palette never grows. Every stop below carries its measured
+     contrast against its own ground; anything under 4.5:1 is a
+     hairline and is never allowed to carry text. */
+
+  --ink:#0B0B0B;          /* near-black, not pure — pure black clips on OLED */
+  --paper:#FFFFFF;
+                                        /*  on paper  |  on ink  */
+  --ink-body:rgba(11,11,11,.62);        /*   5.6:1    secondary prose */
+  --ink-mute:rgba(11,11,11,.58);        /*   4.9:1    small caps labels */
+  --ink-hair:rgba(11,11,11,.12);        /*   rules only, never text */
+  --paper-body:rgba(255,255,255,.72);   /*             10.2:1  secondary prose */
+  --paper-mute:rgba(255,255,255,.62);   /*              7.7:1  small caps labels */
+  --paper-hair:rgba(255,255,255,.14);   /*   rules only, never text */
+
+  /* ── TYPE ── perfect fourth (1.333), 17px base ──────────────
+     Fluid, but still a scale: each step is the one below it
+     times 1.333 at full width. Tracking is size-specific —
+     display sizes take negative tracking (letters read too far
+     apart as they grow), body sits near 0, small caps take a
+     positive bump. Leading tightens as size grows. */
+
+  --serif:"Sentient",Georgia,"Times New Roman",serif;
+  --sans:"Switzer",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+
+  --t-label:.75rem;                              /* 12 — small caps */
+  --t-ui:.875rem;                                /* 14 — nav, controls */
+  --t-0:clamp(1.0625rem,.4vw + .97rem,1.1875rem); /* 17 → 19  body  */
+  --t-1:clamp(1.25rem,.9vw + 1.05rem,1.5625rem);  /* 20 → 25  lede  */
+  --t-2:clamp(1.5rem,1.6vw + 1.15rem,2.0625rem);  /* 24 → 33  h3    */
+  --t-3:clamp(1.875rem,3vw + 1.2rem,2.75rem);     /* 30 → 44  h2    */
+  --t-4:clamp(2.25rem,5vw + 1.1rem,3.625rem);     /* 36 → 58  intro */
+  --t-5:clamp(2.75rem,8vw + .9rem,5.9375rem);     /* 44 → 95  display */
+
+  /* ── SPACE ── 8pt base ──────────────────────────────────────
+     Every margin, gap and pad is a multiple of 8. Sizes that
+     used to be .35 / .85 / 1.15 / 1.75rem are gone; near-misses
+     are what make a layout feel hand-placed rather than set. */
+
+  --s-05:.75rem;  /* 12 — the one half-step, control padding only */
+  --s-1:.5rem;    /*  8 */
+  --s-2:1rem;     /* 16 */
+  --s-3:1.5rem;   /* 24 */
+  --s-4:2rem;     /* 32 */
+  --s-5:3rem;     /* 48 */
+  --s-6:4rem;     /* 64 */
+  --s-7:6rem;     /* 96 */
+  --s-8:8rem;     /* 128 */
+
+  /* ── GRID ── 12 / 8 / 4 ─────────────────────────────────────
+     Desktop 12, tablet 8, phone 4 — the standard three. Section
+     content is placed on it by span, so headings, columns and
+     captions all share one set of vertical edges. */
+
+  --cols:4;
+  --gap:var(--s-3);
+  --gutter:clamp(1.25rem, 5vw, 5rem);
+  --measure:36rem;      /* ~65 characters at body size */
+
+  /* Apple spring approximations, for the non-gesture transitions */
+  --ease-out:cubic-bezier(.16,1,.3,1);      /* critically damped feel */
+  --ease-in:cubic-bezier(.7,0,.84,0);        /* mirror of the above  */
+}
+
+@media (min-width:36rem){ :root{--cols:8;  --gap:var(--s-4)} }
+@media (min-width:64rem){ :root{--cols:12; --gap:var(--s-5)} }
+
+*,*::before,*::after{box-sizing:border-box}
+/* No scroll-behavior:smooth — Lenis drives scrolling and the two
+   fight each other. Anchor jumps go through lenis.scrollTo instead. */
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+
+body{
+  margin:0;
+  font:400 var(--t-0)/1.65 var(--sans);
+  font-optical-sizing:auto;
+  background:var(--ink);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:clip;
+}
+img{display:block;max-width:100%}
+::selection{background:var(--paper);color:var(--ink)}
+
+/* ── Type roles ────────────────────────────────────────────────
+   Serif for anything that speaks, sans for anything that labels
+   or acts. The two never swap jobs — that consistency is what
+   makes the pairing read as a system rather than two fonts. */
+
+.display,.h2,.h3{
+  font-family:var(--serif);
+  font-weight:400;              /* a serif at 400 carries display size */
+  text-wrap:balance;
+  margin:0;
+}
+.display{font-size:var(--t-5);line-height:.98;letter-spacing:-.03em}
+.h2     {font-size:var(--t-3);line-height:1.08;letter-spacing:-.022em}
+.h3     {font-size:var(--t-2);line-height:1.22;letter-spacing:-.016em}
+
+.body{font-size:var(--t-0);line-height:1.65;letter-spacing:-.003em;margin:0;max-width:var(--measure)}
+.lede-type{font-family:var(--serif);font-size:var(--t-1);line-height:1.4;letter-spacing:-.014em}
+.label{
+  font-family:var(--sans);
+  font-size:var(--t-label);line-height:1;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:500;margin:0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   1. INTRO
+   Reference: burocratik.com — near-black field, small understated
+   type, letters resolving out of blur. Centred here: three beats,
+   then the site.
+   ══════════════════════════════════════════════════════════════ */
+
+#intro{
+  position:fixed;inset:0;z-index:100;
+  background:var(--ink);
+  display:grid;place-items:center;
+  cursor:pointer;
+  overflow:hidden;
+}
+#intro[hidden]{display:none}
+
+.intro-stage{
+  position:relative;
+  display:grid;place-items:center;
+  width:min(92vw,60rem);height:min(72vh,40rem);
+  z-index:2;
+}
+
+.beat{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(92vw,56rem);
+  text-align:center;
+  /* Step 4 of the scale. Set in the serif: the intro is the page
+     speaking, and the closing beat is the same sentence the site
+     is built around, so it should arrive in the site's voice. */
+  font-family:var(--serif);
+  font-size:var(--t-4);
+  line-height:1.18;
+  letter-spacing:-.024em;
+  font-weight:400;
+  color:var(--paper);
+}
+/* Characters animate individually, but they are grouped per word so
+   a line that wraps breaks between words and never mid-word. */
+.beat .w{display:inline-block;white-space:nowrap}
+/* Blur and travel are in em so they scale with the type instead of
+   becoming a faint smudge at display size.
+   No will-change here on purpose: a long line is ~60 characters, and
+   hinting every one of them promotes 60 layers and costs more than
+   it saves. The blur is kept modest for the same reason — a 20px
+   blur on 60 simultaneous elements is what makes this stutter. */
+.beat .c{
+  display:inline-block;
+  opacity:0;filter:blur(.22em);transform:translateY(.3em);
+}
+.beat.in .c{
+  opacity:1;filter:blur(0);transform:none;
+  transition:opacity .52s var(--ease-out),filter .52s var(--ease-out),transform .58s var(--ease-out);
+}
+/* Leaving is a plain fade — no blur, no lift, and the whole line
+   goes at once. The per-character delay is inline, so clearing it
+   needs !important or the exit would stagger like the entrance. */
+.beat.out .c{
+  opacity:0;filter:blur(0);transform:none;
+  /* fades in place — no blur, no lift */
+  transition:opacity .5s linear;
+  transition-delay:0s !important;
+}
+
+/* Beat 3 — the mark.
+   logo-white.png is the source JPEG keyed offline to real alpha
+   (white background → clear, line art → white). Because the
+   transparency is in the file, there is no square to hide, and so
+   no invert(), no blend mode, and nothing a stacking context can
+   isolate. It composites correctly on any ground. */
+.beat-mark{
+  position:absolute;
+  /* Also ~3x. The vh term keeps it inside a short laptop window,
+     where width alone would run it past the top and bottom. */
+  width:min(80vw,62vh,40rem);
+  opacity:0;transform:scale(.92);
+  will-change:opacity,transform;
+}
+/* One long decelerating push, held at rest before the fade.
+   The exit MUST restate the scale: removing .in otherwise drops the
+   transform back to the base value with no transition on it, and the
+   mark visibly snaps outward as it fades. */
+.beat-mark.in{
+  opacity:1;transform:scale(1);
+  transition:opacity .7s var(--ease-out),transform 1.5s var(--ease-out);
+}
+.beat-mark.out{
+  opacity:0;transform:scale(1);
+  transition:opacity .5s linear,transform 1.5s var(--ease-out);
+}
+
+.intro-skip{
+  position:absolute;bottom:clamp(var(--s-3),5vh,var(--s-4));left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  color:var(--paper-mute);
+  font-size:var(--t-label);letter-spacing:.11em;text-transform:uppercase;
+  text-shadow:0 1px 12px rgba(0,0,0,.6);
+  opacity:0;transition:opacity .5s var(--ease-out);
+}
+.intro-skip.show{opacity:1}
+
+/* translate3d keeps the slide on the GPU; the hint is on one element
+   so it costs a single layer. */
+#intro{will-change:transform}
+#intro.lift{transform:translate3d(0,-100%,0);transition:transform .92s cubic-bezier(.76,0,.24,1)}
+
+/* ══════════════════════════════════════════════════════════════
+   2. CHROME
+   ══════════════════════════════════════════════════════════════ */
+
+/* Switched instantly, not faded. The overlay is still covering the
+   viewport at the moment this flips, so the fade was invisible — and
+   animating opacity on the whole page forced a second full-viewport
+   layer at exactly the moment the overlay was sliding away. */
+.js #site{opacity:0}
+.js #site.revealed{opacity:1}
+html:not(.js) #intro{display:none}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);
+  padding:var(--s-05) var(--gutter);
+  /* Translucent functional layer — content scrolls underneath,
+     rather than an opaque bar eating a fixed strip.
+     A full-width backdrop-filter is re-rasterised on every scroll
+     frame, so this is the cheapest version that still reads as
+     glass: a smaller radius, no saturate (it buys nothing on a
+     black-and-white page), and a slightly more opaque ground to
+     carry the legibility the blur used to. */
+  background:rgba(11,11,11,.72);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--paper-hair);
+  transform:translate3d(0,-100%,0);
+  transition:transform .5s var(--ease-out),background .4s linear,border-color .4s linear;
+}
+/* translate3d, not none — keeping the bar on its own compositor
+   layer stops the blur being recomputed against a repainting page. */
+nav.show{transform:translate3d(0,0,0)}
+html:not(.js) nav{transform:translate3d(0,0,0)}
+
+/* Over light sections the chrome inverts, so it stays legible
+   without ever becoming an opaque slab. */
+nav.on-light{background:rgba(255,255,255,.75);border-bottom-color:var(--ink-hair)}
+nav.on-light .nav-mark{filter:brightness(0)} /* blackens RGB, keeps alpha */
+nav.on-light a,nav.on-light .nav-name{color:var(--ink)}
+nav.on-light a::after{background:var(--ink)}
+
+.nav-brand{display:flex;align-items:center;gap:var(--s-1);text-decoration:none;color:var(--paper)}
+.nav-mark{width:2rem;height:2rem;transition:filter .4s linear}
+.nav-name{font-size:var(--t-ui);letter-spacing:-.01em;font-weight:600;transition:color .4s linear}
+
+.nav-links{display:flex;align-items:center;gap:clamp(var(--s-2),2.6vw,var(--s-4))}
+nav a{
+  position:relative;color:var(--paper);text-decoration:none;
+  font-size:var(--t-ui);letter-spacing:-.006em;font-weight:500;padding:var(--s-1) 0;
+  transition:color .4s linear,opacity .18s var(--ease-out);
+}
+/* Underline grows from the left — hinting in the direction of travel */
+nav a::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;
+  background:var(--paper);transform:scaleX(0);transform-origin:left;
+  transition:transform .34s var(--ease-out);
+}
+nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
+nav a:active{opacity:.55;transition-duration:0s} /* feedback on press-down */
+
+@media (max-width:36rem){
+  /* The wordmark goes and the links close up, so all three fit
+     beside the mark without wrapping. */
+  .nav-name{display:none}
+  .nav-links{gap:var(--s-2)}
+  .cta,.btn{padding:var(--s-1) var(--s-2)}
+}
+/* Four links beside the mark on the narrowest phones (320–384px):
+   a step smaller and closer, and never wrapping "Service Info". */
+nav a{white-space:nowrap}
+@media (max-width:24rem){
+  .nav-links{gap:var(--s-05)}
+  nav a{font-size:.8125rem}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. SECTIONS
+   ══════════════════════════════════════════════════════════════ */
+
+section{position:relative}
+.dark{background:var(--ink);color:var(--paper)}
+.light{background:var(--paper);color:var(--ink)}
+.wrap{padding:clamp(var(--s-7),13vh,var(--s-8)) var(--gutter)}
+
+/* ── The grid ──────────────────────────────────────────────────
+   12 columns on desktop, 8 on tablet, 4 on phone. Everything in
+   a section sits on it, which is what puts the eyebrow, the
+   heading, the columns and the map on one shared left edge —
+   alignment doing the work that a rule or a box would otherwise
+   have to do. */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  column-gap:var(--gap);
+  row-gap:0;
+}
+/* Spans are declared mobile-first at the 4-column count, then
+   widened. A heading is deliberately narrower than the prose
+   block below it so the two have different silhouettes. */
+.span-full{grid-column:1/-1}
+.span-head{grid-column:1/-1}
+.span-text{grid-column:1/-1}
+@media (min-width:36rem){                  /* 8 columns  */
+  .span-head{grid-column:1/span 7}
+  .span-text{grid-column:1/span 6}
+}
+@media (min-width:64rem){                  /* 12 columns */
+  .span-head{grid-column:1/span 8}
+  .span-text{grid-column:1/span 6}
+}
+
+/* ── Proximity ────────────────────────────────────────────────
+   Related things sit close, unrelated things sit far apart, and
+   the gap sizes come from the 8pt scale. The eyebrow is 8px off
+   its heading because they are one unit; the block below is 48px
+   away because it is a different one. */
+.sec-head{margin-bottom:var(--s-6)}
+.sec-head .label{color:var(--ink-mute);margin-bottom:var(--s-1)}
+.dark .sec-head .label{color:var(--paper-mute)}
+.sec-head .h2{margin-top:var(--s-2)}
+
+/* ── Full-bleed frames (black & white) ──
+   The first of these is the top of the page. */
+.frame{position:relative;height:100svh;min-height:32rem;overflow:hidden}
+/* The wipe lives on a child, never on .frame itself: a clipped
+   element has an empty intersection rect, so an observer watching
+   it could never fire to remove its own clip. */
+.frame-clip{position:absolute;inset:0;clip-path:inset(0 0 100% 0)}
+.frame.seen .frame-clip{clip-path:inset(0 0 0 0);transition:clip-path 1.15s cubic-bezier(.62,.02,.16,1)}
+/* Parallax on its own wrapper, reveal scale on the image, so the
+   two transforms compose instead of overwriting each other. */
+.frame-inner{position:absolute;inset:-4% 0;will-change:transform}
+/* No CSS filter here on purpose. The greyscale, contrast and
+   brightness are baked into chapel-bw.jpg, because re-applying a
+   filter to a 1500px image every frame while it is being parallaxed
+   is the single most expensive thing this page could do on scroll.
+   No will-change either — the scale runs once on reveal, and a
+   permanent hint just holds a second large layer alongside the
+   parallax wrapper's. */
+.frame img{
+  width:100%;height:100%;object-fit:cover;
+  object-position:center;
+  transform:scale(1.14);
+}
+.frame.seen img{transform:scale(1);transition:transform 1.9s cubic-bezier(.22,1,.28,1)}
+
+.frame-caption{
+  position:absolute;left:var(--gutter);right:var(--gutter);
+  bottom:clamp(var(--s-4),7vh,var(--s-6));z-index:2;
+  color:#fff;text-shadow:0 1px 24px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(1rem);
+}
+/* Caption follows the wipe rather than leading it — the photograph
+   arrives first, then the words about it. */
+.frame.seen .frame-caption{
+  opacity:1;transform:none;
+  transition:opacity .7s var(--ease-out) .55s,transform .8s var(--ease-out) .55s;
+}
+.frame-caption .label{color:rgba(255,255,255,.72);margin-bottom:var(--s-2)}
+.frame-caption .h3{max-width:24ch}
+
+/* Scrim only where type sits over the image, not a blanket dim. */
+.frame::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:48%;
+  background:linear-gradient(transparent,rgba(0,0,0,.62));pointer-events:none;
+}
+/* A frame with no caption needs no scrim — the gradient exists to
+   carry type, and without type it is just dimming the photograph. */
+.frame.plain::after{display:none}
+
+/* Where the photograph carries its own strong subject at the
+   bottom, the caption moves to the clean end of the frame. */
+.frame.cap-top .frame-caption{
+  /* Floor of 6rem keeps the label clear of the fixed nav on narrow
+     viewports, where the gutter alone is not enough. */
+  top:clamp(var(--s-7),calc(var(--gutter) + var(--s-6)),10rem);bottom:auto;
+}
+.frame.cap-top::after{
+  inset:0 0 auto 0;height:44%;
+  background:linear-gradient(rgba(0,0,0,.66),transparent);
+}
+
+/* A portrait frame crops this landscape photo to about a third of
+   its width, and centred that lands left of the roof cross. Pushing
+   the crop window right slides the picture left until the cross sits
+   in the middle. Must come after the .frame img rule above — equal
+   specificity, so source order decides. */
+@media (max-width:36rem){
+  .frame img{object-position:85% center}
+}
+
+/* ── Editorial blocks ── */
+.lede{margin-top:var(--s-3);color:var(--ink-body)}
+.dark .lede{color:var(--paper-body)}
+
+/* Three columns on the 12-col grid: 4 + 4 + 4. At 8 columns they
+   each take the full 8 and stack, rather than breaking to an
+   unbalanced 2-then-1 at middling widths. */
+.cols{
+  display:grid;
+  grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  column-gap:var(--gap);
+  row-gap:var(--s-6);
+  margin-top:var(--s-7);
+  align-items:start;
+}
+.col{grid-column:1/-1}
+@media (min-width:64rem){ .col{grid-column:span 4} }
+
+.col .label{color:var(--ink-mute);margin-bottom:var(--s-2)}
+.dark .col .label{color:var(--paper-mute)}
+.col p{margin:var(--s-1) 0 0;line-height:1.62;color:var(--ink-body)}
+.dark .col p{color:var(--paper-body)}
+.col .btn{margin-top:var(--s-3)}
+.col .cta{margin:var(--s-2) 0 var(--s-3)}
+/* Serving: the section head already carries the 64px step to the
+   teams, so the columns don't add their own 96px on top of it. */
+#serve .cols{margin-top:0}
+.col h3{margin-bottom:var(--s-1)}
+.col p a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-hair);overflow-wrap:anywhere}
+.col p a:hover{border-bottom-color:var(--ink)}
+
+/* ── Mission / Vision / Beliefs ────────────────────────────────
+   Mission over Vision on the left, Beliefs on the right, a rule
+   down the middle so the two halves read as separate things. The
+   rule is on the Beliefs block rather than being its own element,
+   so it can never fall out of step with the columns. */
+.creed{align-items:stretch;row-gap:var(--s-6)}
+.creed-stack,.creed-beliefs{grid-column:1/-1}
+.creed-stack{display:flex;flex-direction:column;gap:var(--s-6)}
+.creed .h3{margin-bottom:var(--s-2)}
+.creed p{margin:0;color:var(--paper-body);font-size:var(--t-0);line-height:1.62}
+
+/* The title sits at the left of the block with both paragraphs
+   paired beneath it — the same heading-over-text shape as Mission
+   and Vision, so all three read the same way. */
+.creed-beliefs{display:grid;gap:var(--s-3)}
+.creed-word{grid-column:1/-1;margin-bottom:0}
+
+@media (min-width:64rem){
+  .creed-stack  {grid-column:span 4;justify-content:space-between}
+  .creed-beliefs{
+    grid-column:span 8;
+    grid-template-columns:1fr 1fr;
+    column-gap:var(--s-4);row-gap:var(--s-2);align-items:start;
+    border-left:1px solid var(--paper-hair);
+    padding-left:var(--s-5);
+  }
+}
+
+/* ── Sunday ────────────────────────────────────────────────────
+   The gathering shot on the left at its own size; the type and the
+   worship shot stacked in the right column, spread so the two
+   finish level. Both pictures run at their natural aspect ratios —
+   nothing is cover-cropped here. */
+/* The map is the section's closing band, so the wrap above it does
+   not also pay bottom padding — that gap was the last piece of
+   stray white space in the section. */
+#sunday .wrap{padding-bottom:0}
+.sunday-grid{align-items:stretch;padding-bottom:clamp(var(--s-5),6vh,var(--s-6))}
+.photo{margin:0}
+.photo img{width:100%;height:auto}
+.sunday-left,.sunday-right{grid-column:1/-1}
+.sunday-right{display:flex;flex-direction:column;gap:var(--s-5)}
+.sunday-right .h2{max-width:16ch}
+.sunday-right .body{margin-top:var(--s-3)}
+@media (min-width:64rem){
+  .sunday-left {grid-column:span 6}
+  .sunday-right{grid-column:span 6;justify-content:space-between}
+}
+@media (max-width:64rem){
+  .sunday-left{order:2}
+  .sunday-right{order:1}
+  .sunday-grid{row-gap:var(--s-5)}
+}
+
+/* ── The map ───────────────────────────────────────────────────
+   A full-width band closing the section, deep enough to read as a
+   map rather than a strip, and flush to what is above and below. */
+.map-full{
+  position:relative;
+  height:min(66svh,34rem);
+  overflow:hidden;background:#e9e9e9;
+}
+/* Without this the iframe falls back to its own default 300x150 and
+   sits in the corner of an empty grey band — it has to be told to
+   fill its container. Inert until clicked so it never swallows the
+   page's scroll. */
+.map-full iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;
+  pointer-events:none;
+}
+.map-full.live iframe{pointer-events:auto}
+.map-full.live .map-hint{opacity:0}
+.map-hint{
+  position:absolute;left:50%;bottom:var(--s-3);transform:translateX(-50%);
+  z-index:2;margin:0;
+  padding:var(--s-1) var(--s-05);border-radius:999px;
+  background:rgba(11,11,11,.74);color:#fff;
+  font-size:var(--t-label);letter-spacing:.02em;line-height:1;
+  pointer-events:none;
+  transition:opacity .3s var(--ease-out);
+}
+
+/* ── Actions ───────────────────────────────────────────────────
+   Two tiers, and only two. .cta is the 10% accent: a solid fill,
+   and the only solid fill anywhere on the page — which is what
+   makes it the loudest thing on any screen without a colour
+   being introduced to shout with. .btn is everything else.
+   If a third tier is ever wanted, the answer is no. */
+
+.cta,.btn{
+  display:inline-block;
+  padding:var(--s-05) var(--s-3);
+  border-radius:999px;
+  font-family:var(--sans);
+  font-size:var(--t-ui);font-weight:500;letter-spacing:-.01em;
+  text-decoration:none;white-space:nowrap;
+  transition:background .25s var(--ease-out),border-color .25s var(--ease-out),
+             color .25s var(--ease-out),opacity .18s var(--ease-out);
+}
+
+/* Primary — inverted solid. Takes its colours from the section
+   it sits in, so one class works on both grounds. */
+.cta{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+.dark .cta,nav .cta,.frame .cta{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.cta:hover{opacity:.86}
+.cta:active{opacity:.66;transition-duration:0s}
+/* The nav CTA inverts with the bar as it crosses a light section. */
+nav.on-light .cta{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* Secondary — outline, never filled at rest. */
+.btn{border:1px solid var(--ink-hair);color:var(--ink);background:transparent}
+.dark .btn{border-color:var(--paper-hair);color:var(--paper)}
+.btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn:active{opacity:.6;transition-duration:0s} /* feedback on press-down */
+
+/* ── Contact / give ── */
+/* Inherits the section's colour so it reads correctly on both the
+   light and the dark grounds without a second rule per section. */
+.big-link{
+  display:inline-block;margin-top:var(--s-1);
+  font-size:var(--t-1);
+  letter-spacing:-.02em;font-weight:600;
+  color:inherit;text-decoration:none;
+  border-bottom:1px solid var(--ink-mute);
+  padding-bottom:.1em;
+  transition:border-color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.dark .big-link{border-bottom-color:var(--paper-mute)}
+.big-link:hover{border-bottom-color:currentColor}
+.big-link:active{opacity:.55;transition-duration:0s}
+
+address{font-style:normal}
+
+/* ── Footer ── */
+footer{padding:var(--s-5) var(--gutter);border-top:1px solid var(--paper-hair)}
+.foot-row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:var(--s-4)}
+.foot-mark{width:6.5rem}
+.foot-meta{color:var(--paper-mute);font-size:var(--t-label);letter-spacing:.02em;line-height:1.85}
+.foot-links{margin-top:var(--s-1)}
+.foot-meta a{color:var(--paper-body);text-decoration:none;border-bottom:1px solid var(--paper-hair)}
+.foot-meta a:hover{color:var(--paper)}
+
+/* The footer carries the contact details now, so they are set to be
+   read rather than tucked away — full paper, a real size, and the
+   giving action as the one solid fill on the page. */
+/* Mark, email and Facebook spread evenly across the whole bar
+   rather than the links huddling in one corner. */
+.foot-row{width:100%;justify-content:space-between;align-items:center;gap:var(--s-4)}
+.foot-link{
+  font-size:var(--t-1);letter-spacing:-.014em;
+  color:var(--paper);text-decoration:none;
+  border-bottom:1px solid var(--paper-mute);padding-bottom:.08em;
+  transition:border-color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.foot-link:hover{border-bottom-color:var(--paper)}
+.foot-link:active{opacity:.55;transition-duration:0s}
+@media (max-width:52rem){
+  .foot-link{font-size:var(--t-0)}
+}
+
+/* ── Credit ────────────────────────────────────────────────────
+   The wordmark is Ethan Long Design's production artwork — Inter,
+   outlined by the brand's own build script so nothing depends on a
+   live font — with one <path> per glyph. Each glyph carries --x, its
+   left edge as a fraction of the lockup width, so a hover sweeps
+   white across the mark from left to right; the rule under the name
+   is a second, white rect growing from the left in step with it.
+   Leaving is a plain uniform fade, like every exit on this page.
+   "Site by" sits centred over the mark. The link deliberately has no
+   target="_blank": Facebook's in-app browser has no tabs, so a "new
+   tab" just replaces this page and its X then drops the visitor back
+   in Facebook. In place, the back arrow returns here. */
+.credit{
+  display:inline-flex;flex-direction:column;align-items:center;gap:var(--s-1);
+  color:var(--paper);text-decoration:none;
+  font-size:var(--t-label);letter-spacing:.02em;
+  transition:color .3s var(--ease-out),opacity .18s var(--ease-out);
+}
+.credit:hover,.credit:focus-visible{color:var(--paper)}
+.credit:active{opacity:.6;transition-duration:0s}
+
+/* DESIGN is set at 46% of the name here (the brand's stacked lockup
+   uses 31.5%) so it reads at footer size: at 2.25rem the name's cap
+   height is ~19px and DESIGN's ~9px. */
+.elw{height:2.25rem;width:auto;flex:none;overflow:visible}
+.elw .g{fill:var(--paper);transition:fill .28s var(--ease-out) 0s}
+.elw .rule{fill:var(--paper-hair)}
+.elw .rule-on{
+  fill:var(--paper);transform-box:fill-box;transform-origin:left center;
+  transform:scaleX(0);transition:transform .3s var(--ease-out) 0s;
+}
+.credit:hover .elw .g,.credit:focus-visible .elw .g{
+  fill:var(--paper);transition-delay:calc(var(--x) * 420ms);
+}
+.credit:hover .elw .rule-on,.credit:focus-visible .elw .rule-on{
+  transform:scaleX(1);transition:transform .55s linear 60ms;
+}
+
+/* Under 52rem the four footer items would wrap unevenly as a row, so
+   they become a two-row grid instead: email and Facebook across the
+   top, the mark and the credit beneath. The mark drops to 2rem so a
+   320px screen still fits the logo beside it. */
+.foot-line{display:contents}
+.foot-mark{order:0}.foot-mail{order:1}.foot-fb{order:2}.credit{order:3}
+
+/* Under 52rem the four items would wrap unevenly as one row, so each
+   line becomes a row of its own: email and Facebook across the top,
+   the mark and the credit beneath. Rows size independently, so the
+   email can never widen the credit's row or the page. The mark drops
+   to 2rem so a 320px screen still fits the logo beside it. */
+@media (max-width:52rem){
+  .foot-row{display:flex;flex-direction:column;align-items:stretch;gap:var(--s-4)}
+  .foot-line{display:flex;justify-content:space-between;align-items:center;gap:var(--s-3);flex-wrap:wrap;min-width:0}
+  /* Nothing hugs the right edge: Facebook and the credit share one
+     inset right margin, and the mark is inset the same on the left,
+     so the two rows sit on a common frame inside the gutter. */
+  .foot-line:first-child{padding-right:20px}
+  .foot-line:last-child{padding:0 20px}
+  .elw{height:2rem}
+}
+@media (max-width:40rem){
+  .elw{height:1.75rem}
+}
+@media (max-width:22rem){
+  .foot-line:first-child{padding-right:var(--s-2)}
+  .foot-line:last-child{padding:0 var(--s-2);column-gap:8px}
+}
+
+/* ── Support & Contact ─────────────────────────────────────────
+   Giving left, form right, sized to sit on one screen together. */
+.sc-grid{row-gap:var(--s-6);align-items:start}
+.sc-give,.sc-contact{grid-column:1/-1}
+.sc-give .label,.sc-contact .label{color:var(--paper-mute);margin-bottom:var(--s-2)}
+.sc-give .h3,.sc-contact .h3{margin-bottom:var(--s-4);max-width:26ch}
+.sc-note{margin:var(--s-2) 0 0;color:var(--paper-body);font-size:var(--t-0);max-width:34ch}
+
+.sc-ways{margin:var(--s-5) 0 0;display:flex;flex-direction:column;gap:var(--s-3)}
+.sc-ways dt{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.1em;
+  text-transform:uppercase;font-weight:500;color:var(--paper-mute);margin-bottom:var(--s-1)}
+.sc-ways dd{margin:0;color:var(--paper-body);font-size:var(--t-0);line-height:1.5}
+
+@media (min-width:64rem){
+  .sc-give   {grid-column:span 5}
+  .sc-contact{grid-column:span 6/-1}
+}
+
+/* ── The form ──────────────────────────────────────────────────
+   Inputs are transparent with a single underline rather than boxes
+   — a filled box would be a second solid on a page whose only solid
+   is the giving button. */
+.cform{display:flex;flex-direction:column;gap:var(--s-3);max-width:34rem}
+.field{display:flex;flex-direction:column;gap:var(--s-1)}
+.field span{
+  font-family:var(--sans);font-size:var(--t-label);letter-spacing:.1em;
+  text-transform:uppercase;font-weight:500;color:var(--paper-mute);
+}
+.field input,.field textarea{
+  font:400 var(--t-0)/1.5 var(--sans);
+  color:var(--paper);background:transparent;
+  border:0;border-bottom:1px solid var(--paper-hair);
+  padding:var(--s-1) 0;border-radius:0;
+  transition:border-color .3s var(--ease-out);
+}
+.field textarea{resize:vertical;min-height:5.5rem}
+.field input:focus,.field textarea:focus{
+  outline:none;border-bottom-color:var(--paper);
+}
+.cform .cta{align-self:flex-start;margin-top:var(--s-2);border:0;cursor:pointer;font:500 var(--t-ui)/1 var(--sans)}
+.cform-note{margin:0;color:var(--paper-mute);font-size:var(--t-label);line-height:1.5}
+.hp{position:absolute;left:-200vw;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.cform.sending .cta{opacity:.55;pointer-events:none}
+.cform-done{margin:0;font-size:var(--t-1);line-height:1.5;max-width:34rem}
+.cform-done small{display:block;margin-top:var(--s-1);color:var(--paper-mute);font-size:var(--t-label)}
+/* Marked only after a submit attempt, never while someone is still
+   typing — that is what makes inline validation feel like nagging. */
+.field.bad input,.field.bad textarea{border-bottom-color:#ff8a8a}
+
+/* ── Scroll cue ────────────────────────────────────────────────
+   Bottom right of the chapel, set vertically so it reads as an
+   arrow of type pointing the way down. Drawn in the page's ink
+   rather than white: that corner of the photograph is bright snowy
+   roof, so dark type carries itself there with no backdrop and no
+   scrim over the picture at all. */
+.scroll-cue{
+  position:absolute;z-index:3;
+  right:var(--gutter);bottom:clamp(var(--s-4),7vh,var(--s-6));
+  display:flex;flex-direction:column;align-items:center;gap:var(--s-2);
+  color:var(--ink);
+  opacity:0;transform:translateY(.5rem);
+  transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);
+}
+.scroll-cue.show{opacity:1;transform:none}
+.scroll-cue.gone{opacity:0;transform:translateY(.5rem);transition-duration:.35s}
+.cue-word{
+  writing-mode:vertical-rl;
+  font-family:var(--sans);font-size:var(--t-label);font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;
+}
+
+/* A dark segment falling down a faint track, then a beat of rest
+   before it goes again — the pause is what keeps it from reading
+   as a busy loading spinner. */
+.cue-track{
+  position:relative;width:1px;height:3.5rem;
+  background:var(--ink-hair);overflow:hidden;
+}
+.cue-track::after{
+  content:"";position:absolute;left:0;top:0;width:1px;height:35%;
+  background:var(--ink);
+  animation:cue-fall 2.6s cubic-bezier(.5,0,.35,1) infinite;
+}
+@keyframes cue-fall{
+  0%       {transform:translateY(-100%);opacity:0}
+  12%      {opacity:1}
+  62%      {transform:translateY(300%);opacity:1}
+  70%,100% {transform:translateY(300%);opacity:0}
+}
+@media (prefers-reduced-motion:reduce){
+  /* The cue still says "scroll"; it just stops moving. */
+  .cue-track::after{animation:none;opacity:1;height:100%;background:var(--ink-body)}
+}
+/* Shown on phones too. The gutter is tighter there, so the cue is
+   pulled in a little and its track shortened — it still has to sit
+   clear of the edge without crowding it. */
+@media (max-width:36rem){
+  .scroll-cue{right:calc(var(--gutter) - .25rem);bottom:var(--s-4);gap:var(--s-1)}
+  .cue-track{height:2.5rem}
+}
+
+/* ── Reveal primitive ── */
+.rise{opacity:0;transform:translateY(1.75rem)}
+.rise.seen{opacity:1;transform:none;transition:opacity .75s var(--ease-out),transform .85s var(--ease-out)}
+.rise.d1{transition-delay:.08s}
+.rise.d2{transition-delay:.16s}
+.rise.d3{transition-delay:.24s}
+html:not(.js) .rise{opacity:1;transform:none}
+html:not(.js) .frame-clip{clip-path:none}
+html:not(.js) .frame img{transform:none}
+html:not(.js) .frame-caption{opacity:1;transform:none}
+
+/* ══════════════════════════════════════════════════════════════
+   4. ACCESSIBILITY
+   Reduced motion is a gentler equivalent, not the absence of
+   feedback: cross-fades stay, travel and parallax go.
+   ══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.2s !important}
+  .rise,.frame-caption{transform:none !important}
+  .frame-clip{clip-path:none !important}
+  .frame img{transform:none !important}
+  .frame-caption{opacity:1}
+  .beat .c{filter:none !important;transform:none !important}
+  .beat-mark{filter:none}
+  #intro.lift{transform:none;opacity:0}
+}
+@media (prefers-reduced-transparency:reduce){
+  nav{background:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
+  nav.on-light{background:var(--paper)}
+}
+@media (prefers-contrast:more){
+  :root{--paper-body:rgba(255,255,255,.9);--paper-mute:rgba(255,255,255,.8);--ink-body:rgba(11,11,11,.88);--ink-mute:rgba(11,11,11,.8)}
+  nav{background:var(--ink);backdrop-filter:none}
+}
+
+:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+<style>
+/* ── Prayer page ───────────────────────────────────────────────
+   One dark section: the invitation on the left, the form on the
+   right, sitting under the always-visible nav. No intro here —
+   someone arriving to ask for prayer should get straight to it. */
+nav{transform:translate3d(0,0,0)}
+nav a[aria-current="page"]::after{transform:scaleX(1)}
+.prayer{min-height:100svh;display:flex;align-items:center}
+.prayer .wrap{width:100%;padding-top:calc(var(--s-7) + var(--s-4))}
+.pr-grid{row-gap:var(--s-6);align-items:start}
+.pr-head,.pr-form{grid-column:1/-1}
+.pr-head .label{color:var(--paper-mute);margin-bottom:var(--s-2)}
+.pr-head .h2{max-width:14ch}
+.pr-head .lede{margin-top:var(--s-3);max-width:34ch;color:var(--paper-body)}
+.pr-promise{margin:var(--s-5) 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--s-2);max-width:34ch}
+.pr-promise li{color:var(--paper-body);font-size:var(--t-0);line-height:1.5;padding-left:var(--s-3);position:relative}
+.pr-promise li::before{content:"";position:absolute;left:0;top:.72em;width:var(--s-1);height:1px;background:var(--paper-mute)}
+.field .opt{text-transform:none;letter-spacing:0;font-weight:400}
+.field small{color:var(--paper-mute);font-size:var(--t-label);line-height:1.5}
+.pr-row{display:grid;gap:var(--s-3)}
+@media (min-width:36rem){ .pr-row{grid-template-columns:1fr 1fr} }
+@media (min-width:64rem){
+  .pr-head{grid-column:span 5}
+  .pr-form{grid-column:span 6/-1}
+}
+@media (max-width:36rem){ .nav-links{gap:var(--s-2)} }
+</style>
+</head>
+<body>
+<div id="site">
+
+  <nav id="nav" class="show" aria-label="Primary">
+    <a class="nav-brand" href="/">
+      <img class="nav-mark" src="assets/logo-white.png" alt="">
+      <span class="nav-name">Grove Church Midland</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#sunday">Service Info</a>
+      <a href="/#give">Support</a>
+      <a href="/prayer" aria-current="page">Prayer</a>
+    </div>
+  </nav>
+
+  <main>
+  <section class="prayer dark">
+    <div class="wrap">
+      <div class="grid pr-grid">
+
+        <div class="pr-head">
+          <p class="label">Prayer</p>
+          <h1 class="h2">Prayer Requests</h1>
+          <p class="lede lede-type">Whatever you&rsquo;re carrying, big or small, we would be honored to pray with you.</p>
+          <ul class="pr-promise">
+            <li>You don&rsquo;t need to leave your name.</li>
+            <li>Your request goes privately to the church&rsquo;s email, not onto this site.</li>
+            <li>Leave an email only if you&rsquo;d like someone to reach out.</li>
+          </ul>
+        </div>
+
+        <div class="pr-form">
+          <form class="cform" id="pform" novalidate>
+            <label class="field">
+              <span>Prayer request</span>
+              <textarea name="request" rows="6" maxlength="4000" required></textarea>
+            </label>
+            <div class="pr-row">
+              <label class="field">
+                <span>First name <em class="opt">(optional)</em></span>
+                <input type="text" name="name" autocomplete="given-name" maxlength="80">
+              </label>
+              <label class="field" data-optional-email>
+                <span>Email <em class="opt">(optional)</em></span>
+                <input type="email" name="email" autocomplete="email" maxlength="254">
+              </label>
+            </div>
+            <!-- Honeypot — see index.html. -->
+            <label class="hp" aria-hidden="true">
+              <span>Website</span>
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
+            <button class="cta" type="submit">Send prayer request</button>
+            <p class="cform-note" id="pform-note" aria-live="polite">Leave the name and email blank to stay anonymous.</p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer class="dark">
+    <!-- Two lines. On desktop they are display:contents, so the four
+         items distribute across one bar (mark, email, Facebook, credit
+         via `order`). Below 52rem each line is its own row: email and
+         Facebook on top, the mark and the credit beneath. The rows are
+         independent on purpose — a shared grid column let the email's
+         width push the page 48px past a 375px screen. The giving
+         button lives in Support now — one of it on the page. -->
+    <div class="foot-row">
+      <div class="foot-line">
+        <a class="foot-link foot-mail" href="mailto:grovechurchmidland@gmail.com">grovechurchmidland@gmail.com</a>
+        <a class="foot-link foot-fb" href="https://www.facebook.com/profile.php?id=61579639541049" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div class="foot-line">
+      <img class="foot-mark" src="assets/logo-white.png" alt="Grove Church Midland">
+      <a class="credit" href="https://ethanlongdesign.com" aria-label="Site by Ethan Long Design">
+        <span>Site by</span>
+        <svg class="elw" viewBox="0 0 624.76 140.52" aria-hidden="true" focusable="false">
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.000" d="M5.66 0.00V-72.75H56.15V-58.69H22.90V-43.65H53.52V-29.88H22.90V-14.06H56.10V0.00Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.089" d="M61.21 -58.69V-72.75H122.44V-58.69H100.42V0.00H83.23V-58.69Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.196" d="M128.33 0.00V-72.75H145.56V-44.19H174.62V-72.75H191.80V0.00H174.62V-30.13H145.56V0.00Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.306" d="M196.81 0.00 221.08 -72.75H244.17L269.17 0.00H249.84L239.73 -31.79Q237.29 -39.75 235.02 -48.71Q232.75 -57.67 230.45 -67.29H234.31Q232.11 -57.62 230.06 -48.66Q228.01 -39.70 225.72 -31.79L215.95 0.00ZM213.31 -15.48V-28.66H252.72V-15.48Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.430" d="M274.13 0.00V-72.75H293.08L313.39 -39.89Q315.34 -36.62 317.22 -33.13Q319.10 -29.64 320.96 -25.39Q322.81 -21.14 324.72 -15.62H323.11Q322.81 -19.63 322.50 -24.51Q322.18 -29.39 321.94 -34.01Q321.69 -38.62 321.69 -41.80V-72.75H339.37V0.00H320.37L301.77 -30.13Q299.28 -34.28 297.25 -37.99Q295.23 -41.70 293.20 -46.04Q291.17 -50.39 288.44 -56.25H290.44Q290.78 -51.03 291.10 -46.07Q291.42 -41.11 291.61 -36.99Q291.81 -32.86 291.81 -30.13V0.00Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.578" d="M366.57 0.00V-72.75H383.81V-14.06H414.23V0.00Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.656" d="M450.29 0.98Q440.47 0.98 432.64 -3.37Q424.80 -7.71 420.21 -16.06Q415.62 -24.41 415.62 -36.33Q415.62 -48.34 420.21 -56.69Q424.80 -65.04 432.64 -69.38Q440.47 -73.73 450.29 -73.73Q460.05 -73.73 467.89 -69.38Q475.73 -65.04 480.29 -56.69Q484.86 -48.34 484.86 -36.33Q484.86 -24.37 480.29 -16.02Q475.73 -7.67 467.89 -3.34Q460.05 0.98 450.29 0.98ZM450.29 -14.16Q455.56 -14.16 459.37 -16.70Q463.18 -19.24 465.23 -24.19Q467.28 -29.15 467.28 -36.33Q467.28 -43.55 465.23 -48.54Q463.18 -53.52 459.37 -56.05Q455.56 -58.59 450.29 -58.59Q444.97 -58.59 441.16 -56.03Q437.35 -53.47 435.30 -48.51Q433.25 -43.55 433.25 -36.33Q433.25 -29.15 435.30 -24.22Q437.35 -19.29 441.16 -16.72Q444.97 -14.16 450.29 -14.16Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.778" d="M491.58 0.00V-72.75H510.52L530.83 -39.89Q532.79 -36.62 534.67 -33.13Q536.55 -29.64 538.40 -25.39Q540.26 -21.14 542.16 -15.62H540.55Q540.26 -19.63 539.94 -24.51Q539.62 -29.39 539.38 -34.01Q539.13 -38.62 539.13 -41.80V-72.75H556.81V0.00H537.82L519.21 -30.13Q516.72 -34.28 514.70 -37.99Q512.67 -41.70 510.64 -46.04Q508.62 -50.39 505.88 -56.25H507.88Q508.23 -51.03 508.54 -46.07Q508.86 -41.11 509.06 -36.99Q509.25 -32.86 509.25 -30.13V0.00Z"/></g>
+          <g transform="translate(-5.664 73.730)"><path class="g" style="--x:0.893" d="M598.39 0.98Q588.04 0.98 580.18 -3.54Q572.32 -8.06 567.90 -16.41Q563.48 -24.76 563.48 -36.23Q563.48 -48.14 568.14 -56.52Q572.80 -64.89 580.64 -69.31Q588.48 -73.73 598.20 -73.73Q604.49 -73.73 609.89 -71.92Q615.29 -70.12 619.51 -66.80Q623.73 -63.48 626.34 -58.96Q628.96 -54.44 629.64 -49.02H612.21Q611.57 -51.27 610.38 -53.05Q609.18 -54.83 607.42 -56.08Q605.67 -57.32 603.44 -57.96Q601.22 -58.59 598.49 -58.59Q593.21 -58.59 589.28 -56.01Q585.35 -53.42 583.23 -48.46Q581.11 -43.51 581.11 -36.47Q581.11 -29.39 583.18 -24.41Q585.26 -19.43 589.16 -16.80Q593.07 -14.16 598.54 -14.16Q603.47 -14.16 606.86 -15.77Q610.26 -17.38 612.01 -20.39Q613.77 -23.39 613.77 -27.44L617.04 -27.00H599.22V-39.65H630.42V-30.08Q630.42 -20.36 626.32 -13.40Q622.22 -6.45 614.97 -2.73Q607.72 0.98 598.39 0.98Z"/></g>
+          <rect class="rule" x="0.000" y="88.901" width="624.758" height="2.988"/>
+          <rect class="rule-on" x="0.000" y="88.901" width="624.758" height="2.988"/>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.290" d="M14.69 0.00H6.22V-5.19H14.40Q17.90 -5.19 20.25 -6.48Q22.60 -7.77 23.79 -10.34Q24.98 -12.92 24.98 -16.78Q24.98 -20.60 23.79 -23.16Q22.60 -25.72 20.29 -27.00Q17.99 -28.28 14.55 -28.28H6.04V-33.47H14.91Q19.90 -33.47 23.47 -31.47Q27.04 -29.47 28.96 -25.72Q30.88 -21.97 30.88 -16.78Q30.88 -11.54 28.96 -7.78Q27.04 -4.02 23.42 -2.01Q19.79 0.00 14.69 0.00ZM9.37 -33.47V0.00H3.37V-33.47Z"/></g>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.374" d="M55.91 0.00V-33.47H77.65V-28.41H61.91V-19.38H76.48V-14.40H61.91V-5.05H77.74V0.00Z"/></g>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.447" d="M114.83 0.52Q110.94 0.52 108.08 -0.70Q105.21 -1.91 103.60 -4.22Q101.98 -6.54 101.85 -9.84H107.75Q107.91 -8.09 108.85 -6.92Q109.80 -5.75 111.35 -5.18Q112.90 -4.60 114.78 -4.60Q116.76 -4.60 118.28 -5.21Q119.79 -5.82 120.64 -6.91Q121.50 -8.00 121.50 -9.43Q121.50 -10.74 120.75 -11.59Q119.99 -12.44 118.63 -13.04Q117.28 -13.63 115.46 -14.08L111.66 -15.07Q107.46 -16.15 105.11 -18.33Q102.77 -20.51 102.77 -24.06Q102.77 -27.02 104.36 -29.24Q105.96 -31.47 108.72 -32.69Q111.48 -33.92 114.98 -33.92Q118.56 -33.92 121.25 -32.68Q123.95 -31.45 125.46 -29.27Q126.98 -27.09 127.05 -24.30H121.23Q121.00 -26.46 119.31 -27.64Q117.61 -28.82 114.89 -28.82Q113.01 -28.82 111.65 -28.24Q110.29 -27.67 109.56 -26.68Q108.83 -25.70 108.83 -24.42Q108.83 -23.02 109.70 -22.12Q110.56 -21.23 111.87 -20.69Q113.19 -20.15 114.54 -19.81L117.66 -19.00Q119.52 -18.55 121.27 -17.81Q123.03 -17.07 124.43 -15.94Q125.83 -14.80 126.66 -13.18Q127.50 -11.57 127.50 -9.39Q127.50 -6.45 125.99 -4.21Q124.49 -1.98 121.66 -0.73Q118.83 0.52 114.83 0.52Z"/></g>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.528" d="M158.32 -33.47V0.00H152.32V-33.47Z"/></g>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.578" d="M198.82 0.45Q194.19 0.45 190.71 -1.64Q187.23 -3.73 185.27 -7.57Q183.32 -11.41 183.32 -16.69Q183.32 -22.10 185.33 -25.95Q187.34 -29.81 190.80 -31.86Q194.26 -33.92 198.64 -33.92Q201.40 -33.92 203.79 -33.11Q206.18 -32.30 208.06 -30.81Q209.93 -29.31 211.14 -27.27Q212.34 -25.22 212.72 -22.78H206.59Q206.18 -24.12 205.48 -25.18Q204.77 -26.23 203.77 -27.00Q202.77 -27.76 201.50 -28.15Q200.23 -28.55 198.70 -28.55Q196.01 -28.55 193.89 -27.18Q191.76 -25.81 190.55 -23.18Q189.34 -20.55 189.34 -16.73Q189.34 -12.96 190.55 -10.32Q191.76 -7.68 193.90 -6.30Q196.03 -4.92 198.84 -4.92Q201.40 -4.92 203.27 -5.91Q205.15 -6.90 206.17 -8.71Q207.19 -10.53 207.19 -13.00L208.56 -12.78H199.47V-17.50H213.01V-13.48Q213.01 -9.19 211.18 -6.05Q209.35 -2.92 206.15 -1.24Q202.95 0.45 198.82 0.45Z"/></g>
+          <g transform="translate(177.526 140.000)"><path class="g s" style="--x:0.665" d="M238.15 0.00V-33.47H244.93L256.50 -15.03Q257.22 -13.88 258.03 -12.43Q258.84 -10.98 259.71 -9.20Q260.59 -7.41 261.44 -5.23H260.77Q260.61 -7.12 260.49 -9.11Q260.36 -11.10 260.31 -12.88Q260.25 -14.67 260.25 -15.90V-33.47H266.34V0.00H259.53L249.09 -16.60Q248.10 -18.19 247.22 -19.74Q246.35 -21.29 245.34 -23.25Q244.33 -25.20 242.89 -27.96H243.74Q243.88 -25.52 243.99 -23.33Q244.10 -21.14 244.18 -19.41Q244.26 -17.68 244.26 -16.62V0.00Z"/></g>
+        </svg>
+      </a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* Same validation manners as the contact form on the home page:
+   nothing is marked until someone tries to send, and a mark clears
+   as soon as it's fixed. Only the request is required; an email is
+   checked only if one was typed.
+
+   There is deliberately no mailto: fallback here. The contact form
+   opens the visitor's mail app when the function is down, but that
+   would send from their own address and quietly end the anonymity
+   this page promises. */
+(function(){
+  var form = document.getElementById("pform");
+  if (!form) return;
+  var note = document.getElementById("pform-note");
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function check(el){
+    var v = el.value.trim();
+    var ok = el.name === "request" ? v !== ""
+           : el.name === "email"   ? (v === "" || EMAIL.test(v))
+           : true;
+    el.closest(".field").classList.toggle("bad", !ok);
+    return ok;
+  }
+
+  form.addEventListener("input", function(e){
+    var f = e.target.closest && e.target.closest(".field");
+    if (f && f.classList.contains("bad")) check(e.target);
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var req = form.elements.request, email = form.elements.email;
+    var okReq = check(req), okEmail = check(email);
+    if (!okReq){ note.textContent = "Write your prayer request first."; req.focus(); return; }
+    if (!okEmail){ note.textContent = "That email doesn’t look right — fix it or leave it blank."; email.focus(); return; }
+
+    var f = new FormData(form);
+    var button = form.querySelector(".cta");
+    var label = button.textContent;
+    form.classList.add("sending");
+    button.disabled = true;
+    button.textContent = "Sending…";
+    note.textContent = "";
+
+    function fail(msg){
+      form.classList.remove("sending");
+      button.disabled = false;
+      button.textContent = label;
+      note.textContent = msg || "Couldn’t send just now. Please try again in a moment.";
+    }
+
+    fetch("/api/prayer", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        request: (f.get("request") || "").trim(),
+        name:    (f.get("name") || "").trim(),
+        email:   (f.get("email") || "").trim(),
+        website: f.get("website") || ""
+      })
+    }).then(function(r){
+      return r.json().then(function(j){ return {status: r.status, ok: r.ok && j && j.ok, error: j && j.error}; });
+    }).then(function(r){
+      if (!r.ok) return fail(r.status === 400 ? r.error : null);
+      var name = (f.get("name") || "").trim();
+      var done = document.createElement("p");
+      done.className = "cform-done";
+      done.setAttribute("role", "status");
+      done.textContent = "Thank you" + (name ? ", " + name : "") + ". Your request has been sent, and we’ll be praying with you.";
+      if ((f.get("email") || "").trim()){
+        var small = document.createElement("small");
+        small.textContent = "Someone may reach out to the email you left.";
+        done.appendChild(small);
+      }
+      form.replaceWith(done);
+    }).catch(function(){ fail(); });
+  });
+})();
+</script>
+</body>
+</html>
