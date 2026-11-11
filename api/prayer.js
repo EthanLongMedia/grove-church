@@ -59,6 +59,8 @@ async function handle(payload, { send, env }) {
   try {
     await send(mail);
   } catch (e) {
+    // Resend's reason only — never the request itself.
+    console.error("prayer send failed:", e && e.message);
     return { status: 502, body: { ok: false, error: "Couldn't send just now." } };
   }
   return { status: 200, body: { ok: true } };
@@ -70,7 +72,7 @@ async function sendWithResend(mail, key) {
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify(mail),
   });
-  if (!r.ok) throw new Error(`Resend ${r.status}`);
+  if (!r.ok) throw new Error(`Resend ${r.status}: ${await r.text()}`);
   return r.json();
 }
 

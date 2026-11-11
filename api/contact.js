@@ -51,6 +51,8 @@ async function handle(payload, { send, env }) {
       text: `${message}\n\n— ${name} (${email})`,
     });
   } catch (e) {
+    // Resend's reason only — never the request itself.
+    console.error("contact send failed:", e && e.message);
     return { status: 502, body: { ok: false, error: "Couldn't send just now." } };
   }
   return { status: 200, body: { ok: true } };
